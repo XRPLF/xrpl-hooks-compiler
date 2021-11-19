@@ -14,3 +14,4 @@ clangd:
 
 jsonrpc-ws-proxy:
 	cp -LR ~/jsonrpc-ws-proxy .
+	rm -rf jsonrpc-ws-proxy/.git

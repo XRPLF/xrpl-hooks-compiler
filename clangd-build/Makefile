@@ -1,5 +1,7 @@
 # must be run as root
 
+all: build1 build2
+
 build1:
 	docker build -t clangd-build .
 
