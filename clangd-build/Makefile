@@ -6,4 +6,4 @@ build1:
 	docker build -t clangd-build .
 
 build2:
-	docker run -v ~/llvm-project:/mnt/llvm-project clangd-build:latest
+	docker run -v $(realpath ../llvm-project):/mnt/llvm-project clangd-build:latest

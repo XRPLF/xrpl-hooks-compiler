@@ -10,15 +10,18 @@ shell:
 	docker run -it --entrypoint=/bin/bash xrpl-hooks-compiler:latest
 
 wasi-sdk:
-	cp -a ~/wasi-sdk/build/install/opt/wasi-sdk .
+	cp -a ../wasi-sdk/build/install/opt/wasi-sdk .
 
 clangd:
-	cp ~/llvm-project/build/bin/clangd .
+	cp ../llvm-project/build/bin/clangd .
 
 jsonrpc-ws-proxy:
-	cp -LR ~/jsonrpc-ws-proxy .
+	cp -LR ../jsonrpc-ws-proxy .
 	rm -rf jsonrpc-ws-proxy/.git
 
 c2wasm-api:
-	cp -LR ~/c2wasm-api .
+	cp -LR ../c2wasm-api .
 	rm -rf c2wasm-api/.git
+
+clean:
+	-rm -rf c2wasm-api clangd jsonrpc-ws-proxy wasi-sdk
