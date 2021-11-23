@@ -6,4 +6,4 @@ build1:
 	docker build -t clang-build .
 
 build2:
-	docker run -v ~/wasi-sdk:/wasi-sdk clang-build:latest
+	docker run -v ~/wasi-sdk:/mnt/wasi-sdk clang-build:latest

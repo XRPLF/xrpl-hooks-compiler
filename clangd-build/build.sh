@@ -4,8 +4,7 @@ echo running build.sh...
 set -e
 
 # instructions from https://github.com/llvm/llvm-project/tree/main/clang-tools-extra/clangd#building-and-testing-clangd
-export LLVM_ROOT=`realpath ./llvm-project`
-echo LLVM_ROOT=$LLVM_ROOT
+export LLVM_ROOT=/mnt/llvm-project
 cd $LLVM_ROOT
 if [ -d build ]; then
     cd build
