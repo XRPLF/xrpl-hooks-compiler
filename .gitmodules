@@ -10,3 +10,4 @@
 [submodule "wasi-sdk"]
 	path = wasi-sdk
 	url = https://github.com/eqlabs/wasi-sdk
+	branch = main
