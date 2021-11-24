@@ -9,4 +9,4 @@
 	url = https://github.com/eqlabs/llvm-project.git
 [submodule "wasi-sdk"]
 	path = wasi-sdk
-	url = https://github.com/WebAssembly/wasi-sdk
+	url = https://github.com/eqlabs/wasi-sdk
