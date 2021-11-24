@@ -6,4 +6,4 @@ build1:
 	docker build -t clang-build .
 
 build2:
-	docker run -v $(realpath ../wasi-sdk):/mnt/wasi-sdk clang-build:latest
+	docker run -v $(realpath ../wasi-sdk):/mnt/wasi-sdk -v $(realpath ../llvm-project):/mnt/llvm-project clang-build:latest

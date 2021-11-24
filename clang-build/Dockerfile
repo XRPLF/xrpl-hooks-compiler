@@ -3,4 +3,5 @@ MAINTAINER Vaclav Barta "vaclav@equilibrium.co"
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y build-essential python3 cmake ninja-build
 RUN apt-get install -y git
-CMD cd /mnt/wasi-sdk && make
+ADD build.sh .
+CMD ./build.sh
