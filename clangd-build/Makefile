@@ -1,9 +1,11 @@
 # must be run as root
 
+CLANGD_BUILD_CONTAINER_TAG?=clangd-build
+
 all: build1 build2
 
 build1:
-	docker build -t clangd-build .
+	docker build -t $(CLANGD_BUILD_CONTAINER_TAG) .
 
 build2:
-	docker run -v $(realpath ../llvm-project):/mnt/llvm-project clangd-build:latest
+	docker run -v $(realpath ../llvm-project):/mnt/llvm-project $(CLANGD_BUILD_CONTAINER_TAG):latest
