@@ -1,6 +1,5 @@
-FROM --platform=linux/amd64 node:17-buster
+FROM --platform=linux/amd64 node:17-alpine
 MAINTAINER Vaclav Barta "vaclav@equilibrium.co"
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y build-essential python3 cmake ninja-build
+RUN apk --no-cache add --update bash build-base python3 cmake ninja git
 ADD build.sh .
 CMD ./build.sh

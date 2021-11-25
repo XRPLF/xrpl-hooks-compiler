@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo running build.sh...
 set -e

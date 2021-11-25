@@ -1,6 +1,7 @@
-FROM --platform=linux/amd64 node:17-buster
+FROM --platform=linux/amd64 node:17-alpine
 MAINTAINER Vaclav Barta "vaclav@equilibrium.co"
-RUN apt-get update && apt-get upgrade -y
+# hook example uses standard include (although it probably shouldn't)
+RUN apk --no-cache add --update musl-dev
 ADD clangd /usr/bin
 ADD jsonrpc-ws-proxy /jsonrpc-ws-proxy
 WORKDIR /jsonrpc-ws-proxy
