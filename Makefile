@@ -10,4 +10,4 @@ checkout:
 build:
 	$(MAKE) -C clang-build
 	$(MAKE) -C clangd-build
-	$(MAKE) -C docker-build
+	$(MAKE) -C docker
