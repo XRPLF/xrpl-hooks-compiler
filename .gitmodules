@@ -1,6 +1,3 @@
-[submodule "c2wasm-api"]
-	path = c2wasm-api
-	url = https://github.com/eqlabs/c2wasm-api.git
 [submodule "jsonrpc-ws-proxy"]
 	path = jsonrpc-ws-proxy
 	url = https://github.com/eqlabs/jsonrpc-ws-proxy.git
