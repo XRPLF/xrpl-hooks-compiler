@@ -11,3 +11,6 @@ build:
 	$(MAKE) -C clang-build
 	$(MAKE) -C clangd-build
 	$(MAKE) -C docker
+
+docker.zip:
+	zip -r docker.zip docker/clangd docker/wasi-sdk
