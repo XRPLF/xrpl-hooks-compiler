@@ -1,6 +1,3 @@
-[submodule "jsonrpc-ws-proxy"]
-	path = jsonrpc-ws-proxy
-	url = https://github.com/eqlabs/jsonrpc-ws-proxy.git
 [submodule "llvm-project"]
 	path = llvm-project
 	url = https://github.com/eqlabs/llvm-project.git
