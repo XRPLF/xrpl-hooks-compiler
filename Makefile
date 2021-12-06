@@ -4,13 +4,16 @@ all: checkout build
 checkout:
 	git submodule update --init --recursive
 
+bin:
+	mkdir $@
+
 # Builds a docker image with (proxy of) clangd running on port 3001
 # and (API of) clang running on port 9000. Run as root, on a Linux
 # machine with docker.
-build:
+build: bin
 	$(MAKE) -C clang-build
 	$(MAKE) -C clangd-build
 	$(MAKE) -C docker
 
-docker.zip:
-	zip -r docker.zip docker/clangd docker/wasi-sdk
+bin.zip: bin
+	zip -r $@ $<

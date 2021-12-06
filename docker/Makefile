@@ -11,11 +11,11 @@ run:
 shell:
 	docker run -it --entrypoint=/bin/sh $(MAIN_CONTAINER_TAG):latest
 
-wasi-sdk:
-	cp -a ../wasi-sdk/build/install/opt/wasi-sdk .
+wasi-sdk: ../bin/wasi-sdk
+	cp -a $< .
 
-clangd:
-	cp ../llvm-project/build/bin/clangd .
+clangd: ../bin/clangd
+	cp $< .
 
 jsonrpc-ws-proxy:
 	cp -LR ../jsonrpc-ws-proxy .
