@@ -19,12 +19,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download release
-        uses: Legion2/download-release-action@v2.1.0
+        uses: robinraju/release-downloader@v1.3
         with:
           repository: eqlabs/xrpl-hooks-compiler
           tag: "v1.3"
-          path: downloads
-          file: bin.zip
+          zipBall: true
+          # path: downloads
+          # file: bin.zip
 
       # Build Docker image
       - name: Docker build
