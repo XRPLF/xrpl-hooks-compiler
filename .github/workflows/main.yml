@@ -17,15 +17,16 @@ jobs:
       # Clone the repository
       - name: Checkout
         uses: actions/checkout@v2
+        lfs: true
 
-      - name: Download release
-        uses: robinraju/release-downloader@v1.3
-        with:
-          repository: eqlabs/xrpl-hooks-compiler
-          tag: "v1.3"
-          zipBall: true
-          # path: downloads
-          # file: bin.zip
+      # - name: Download release
+      #   uses: robinraju/release-downloader@v1.3
+      #   with:
+      #     repository: eqlabs/xrpl-hooks-compiler
+      #     tag: "v1.3"
+      #     filename: "bin.zip"
+      #     # path: downloads
+      #     # file: bin.zip
 
       # Build Docker image
       - name: Docker build
