@@ -17,7 +17,8 @@ jobs:
       # Clone the repository
       - name: Checkout
         uses: actions/checkout@v2
-        lfs: true
+        with:
+          lfs: true
 
       # - name: Download release
       #   uses: robinraju/release-downloader@v1.3
