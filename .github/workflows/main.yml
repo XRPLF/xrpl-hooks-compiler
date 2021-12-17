@@ -22,8 +22,8 @@ jobs:
         with:
           repo: "eqlabs/xrpl-hooks-compiler"
           version: "tags/v1.3"
-          file: "bin.zio"
-          target: "./plague-linux.zip"
+          file: "bin.zip"
+          target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Download release
@@ -45,5 +45,6 @@ jobs:
       # Push the Docker image to Heroku Container Registry
       - name: Publish
         run: |
+          unzip -o bin.zip
           heroku container:push web -a $APP_NAME
           heroku container:release web -a $APP_NAME
