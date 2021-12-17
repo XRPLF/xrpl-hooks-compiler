@@ -17,11 +17,6 @@ jobs:
       # Clone the repository
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          lfs: true
-
-      # - name: SSH Debug
-      #   uses: lhotari/action-upterm@v1
       - name: Download bin.zip
         uses: dsaltares/fetch-gh-release-asset@master
         with:
@@ -43,6 +38,9 @@ jobs:
       # Build Docker image
       - name: Docker build
         run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+
+      - name: SSH Debug
+        uses: lhotari/action-upterm@v1
 
       # Push the Docker image to Heroku Container Registry
       - name: Publish
