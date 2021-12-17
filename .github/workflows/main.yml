@@ -4,9 +4,9 @@ with:
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 #set environment variables
 env:
