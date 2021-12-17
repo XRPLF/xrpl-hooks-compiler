@@ -20,6 +20,9 @@ jobs:
         with:
           lfs: true
 
+      - name: SSH Debug
+        uses: lhotari/action-upterm@v1
+
       # - name: Download release
       #   uses: robinraju/release-downloader@v1.3
       #   with:
