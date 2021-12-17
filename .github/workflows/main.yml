@@ -3,8 +3,6 @@ name: c2wasm-api to Heroku CD
 on:
   push:
     branches: [master, feat/dockerize-c2wasm-api]
-  pull_request:
-    branches: [master]
 
 #set environment variables
 env:
@@ -26,7 +24,7 @@ jobs:
           repository: eqlabs/xrpl-hooks-compiler
           tag: "v1.3"
           path: downloads
-          file: bin.zpi
+          file: bin.zip
 
       # Build Docker image
       - name: Docker build
