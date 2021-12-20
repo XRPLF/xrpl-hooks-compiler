@@ -58,6 +58,7 @@ Make sure you have Docker installed. Clone this project. Download latest `bin.zi
 
 - Run `make bin.zip` on the project root
 - CD to docker folder `cd docker`
+- Run `make c2wasm-api && make clangd && make wasi-sdk`
 - Run `docker-compose build`
 - Run `docker-compose up` or `docker-compose up -d`
 - This should start server at port `:9000`, the actual compiling endpoint is this: [http://localhost:9000/api/build](localhost:9000/api/build). Note that it takes a while to start.
