@@ -19,15 +19,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Get submodules
-        env:
-          SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
-
+      # - name: Get submodules
+      #   env:
+      #     SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
+      #   run: |
+      #     eval `ssh-agent -s`
+      #     ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update c2wasm-api --init --recursive
       - name: SSH Debug
         uses: lhotari/action-upterm@v1
-        # run: |
-        #   eval `ssh-agent -s`
-        #   ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update c2wasm-api --init --recursive
 
       - name: Download bin.zip
         uses: dsaltares/fetch-gh-release-asset@master
@@ -41,6 +40,9 @@ jobs:
       # Build Docker image
       - name: Docker build
         run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+
+      # - name: SSH Debug
+      #   uses: lhotari/action-upterm@v1
 
       # Push the Docker image to Heroku Container Registry
       - name: Publish
