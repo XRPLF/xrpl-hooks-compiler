@@ -47,7 +47,6 @@ jobs:
           unzip -o bin.zip
 
       - name: Local build
-        if: contains('refs/heads/master', github.ref)
         run: |
           cd docker
           make c2wasm-api && make clangd && make wasi-sdk
