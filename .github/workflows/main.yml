@@ -8,6 +8,7 @@ on:
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   APP_NAME: ${{ 'xrpl-c2wasm-api' }}
+  SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
 
 jobs:
   deploy:
