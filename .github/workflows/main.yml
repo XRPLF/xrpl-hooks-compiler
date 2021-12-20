@@ -18,9 +18,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Checkout submodule
-        run: |
-          git submodule update c2wasm-api --init --recursive
       - name: Get submodules
         env:
           SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
