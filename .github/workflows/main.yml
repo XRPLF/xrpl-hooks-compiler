@@ -2,16 +2,19 @@ name: c2wasm-api to Heroku CD
 
 on:
   push:
-    branches: [master, feat/dockerize-c2wasm-api]
-
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 #set environment variables
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   APP_NAME: ${{ 'xrpl-c2wasm-api' }}
 
 jobs:
-  deploy:
-    name: Deploy to Heroku
+  build:
+    name: Build locally
     runs-on: ubuntu-18.04
     steps:
       # Clone the repository
@@ -37,17 +40,32 @@ jobs:
           target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # - name: SSH Debug
+      #   uses: lhotari/action-upterm@v1
+      - name: Unzip binaries
+        run: |
+          unzip -o bin.zip
+
+      - name: Local build
+        if: contains('refs/heads/master', github.ref)
+        run: |
+          cd docker
+          make c2wasm-api && make clangd && make wasi-sdk
+          docker build . --tag web
+
+
+  deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-18.04
+    if: contains('refs/heads/master', github.ref)
+    steps:
       # Build Docker image
       - name: Docker build
         run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
 
-      # - name: SSH Debug
-      #   uses: lhotari/action-upterm@v1
-
       # Push the Docker image to Heroku Container Registry
       - name: Publish
         run: |
-          unzip -o bin.zip
           cd docker
           make c2wasm-api && make clangd && make wasi-sdk
           heroku container:push web -a $APP_NAME
