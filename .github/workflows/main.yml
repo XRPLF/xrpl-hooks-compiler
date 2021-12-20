@@ -17,13 +17,16 @@ jobs:
       # Clone the repository
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.SSH_KEY_C2WASM_API }}
-          persist-credentials: true
 
       - name: Checkout submodule
         run: |
           git submodule update c2wasm-api --init --recursive
+      - name: Get submodules
+        env:
+          SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update c2wasm-api --init --recursive
 
       - name: Download bin.zip
         uses: dsaltares/fetch-gh-release-asset@master
@@ -38,12 +41,13 @@ jobs:
       - name: Docker build
         run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
 
-      - name: SSH Debug
-        uses: lhotari/action-upterm@v1
+      # - name: SSH Debug
+      #   uses: lhotari/action-upterm@v1
 
       # Push the Docker image to Heroku Container Registry
       - name: Publish
         run: |
           unzip -o bin.zip
+          cd docker
           heroku container:push web -a $APP_NAME
           heroku container:release web -a $APP_NAME
