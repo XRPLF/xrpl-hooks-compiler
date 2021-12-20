@@ -49,5 +49,7 @@ jobs:
         run: |
           unzip -o bin.zip
           cd docker
+          make c2wasm-api && make clangd && make wasi-sdk
           heroku container:push web -a $APP_NAME
+          make clean
           heroku container:release web -a $APP_NAME
