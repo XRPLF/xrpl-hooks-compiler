@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    name: Build locally
+    name: Test build image
     runs-on: ubuntu-18.04
     steps:
       # Clone the repository
@@ -40,8 +40,10 @@ jobs:
           target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Uncomment this if you want to debug pipeline
       # - name: SSH Debug
       #   uses: lhotari/action-upterm@v1
+
       - name: Unzip binaries
         run: |
           unzip -o bin.zip
@@ -57,7 +59,7 @@ jobs:
     name: Deploy to Heroku
     runs-on: ubuntu-18.04
     needs: [build]
-    if: contains('refs/heads/feat/dockerize-c2wasm-api', github.ref)
+    if: success() && contains('refs/heads/master', github.ref)
     steps:
       # Build Docker image
       - name: Docker build
