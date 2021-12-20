@@ -18,7 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          submodules: true
+          ssh-key: ${{ secrets.SSH_KEY_C2WASM_API }}
+          persist-credentials: true
+
+      - name: Checkout submodule
+        run: |
+          git submodule update c2wasm-api --init --recursive
 
       - name: Download bin.zip
         uses: dsaltares/fetch-gh-release-asset@master
@@ -28,15 +33,6 @@ jobs:
           file: "bin.zip"
           target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Download release
-      #   uses: robinraju/release-downloader@v1.3
-      #   with:
-      #     repository: eqlabs/xrpl-hooks-compiler
-      #     tag: "v1.3"
-      #     filename: "bin.zip"
-      #     # path: downloads
-      #     # file: bin.zip
 
       # Build Docker image
       - name: Docker build
