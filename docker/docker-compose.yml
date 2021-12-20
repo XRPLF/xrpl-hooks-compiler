@@ -1,0 +1,13 @@
+version: '3.6'
+services:
+  server:
+    build: .
+    restart: always
+    ports:
+      - "9000:9000"
+    working_dir: /app
+    command: yarn dev
+    volumes:
+      - ../c2wasm-api/src:/app/src
+    environment:
+      NODE_ENV: development
