@@ -56,7 +56,7 @@ jobs:
   deploy:
     name: Deploy to Heroku
     runs-on: ubuntu-18.04
-    if: contains('refs/heads/master', github.ref)
+    if: contains('refs/heads/xrpl-c2wasm-api', github.ref)
     steps:
       # Build Docker image
       - name: Docker build
