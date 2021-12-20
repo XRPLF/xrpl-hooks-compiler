@@ -20,7 +20,7 @@ so it's recommended to split the build into 2 steps:
 ```bash
 $ make checkout
 
-# make build
+$ make build
 ```
 
 Note that unless you have a credential manager set up for your github
@@ -54,9 +54,14 @@ in the top-level directory.
 
 ## Developing c2wasm-api without building
 
-Make sure you have Docker installed. Clone this project. Download latest `bin.zip` file from the releases of this GitHub repository and put it project root, make sure it is named `bin.zip`
+Make sure you have Docker installed. Clone this project. Download
+latest bin.zip file from the releases of this GitHub repository, put
+it project root and unzip:
 
-- Run `make bin.zip` on the project root
+```
+unzip bin.zip
+```
+
 - CD to docker folder `cd docker`
 - Run `make c2wasm-api && make clangd && make wasi-sdk`
 - Run `docker-compose build`
