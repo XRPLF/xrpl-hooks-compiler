@@ -16,7 +16,7 @@ class Demultiplex:
         }
 
     def parse(self, ln):
-        if ln.startswith("Forwarding new client"):
+        if ln.find("Forwarding new client") >= 0:
             self.incoming_count += 1
         elif ln.find("LSP finished, exiting with status") >= 0:
             self.outgoing_count += 1
