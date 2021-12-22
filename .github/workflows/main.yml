@@ -54,19 +54,14 @@ jobs:
           make c2wasm-api && make clangd && make wasi-sdk
           docker build . --tag web
 
-
-  deploy:
-    name: Deploy to Heroku
-    runs-on: ubuntu-18.04
-    needs: [build]
-    if: success() && contains('refs/heads/master', github.ref)
-    steps:
       # Build Docker image
       - name: Docker build
+        if: success() && contains('refs/heads/master', github.ref)
         run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
 
       # Push the Docker image to Heroku Container Registry
       - name: Publish
+        if: success() && contains('refs/heads/master', github.ref)
         run: |
           cd docker
           make c2wasm-api && make clangd && make wasi-sdk
