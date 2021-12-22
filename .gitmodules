@@ -3,10 +3,7 @@
 	url = https://github.com/eqlabs/wasi-sdk.git
 [submodule "c2wasm-api"]
 	path = c2wasm-api
-	url = https://github.com/eqlabs/c2wasm-api
-[submodule "jsonrpc-ws-proxy"]
-	path = jsonrpc-ws-proxy
-	url = https://github.com/eqlabs/jsonrpc-ws-proxy.git
+	url = git@github.com:eqlabs/c2wasm-api.git
 [submodule "llvm-project"]
 	path = llvm-project
 	url = https://github.com/eqlabs/llvm-project.git
