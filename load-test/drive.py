@@ -16,7 +16,7 @@ class Driver:
         self.br = webdriver.Chrome(service=service, options=options)
 
     def run(self):
-        self.br.execute_script('window.open("http://localhost:3000/develop/be088224fb37c0075e84491da0e602c1", "_blank");')
+        self.br.execute_script('window.open("https://xrpl-hooks-ide.vercel.app/develop/be088224fb37c0075e84491da0e602c1", "_blank");')
 
     def close(self):
         self.br.close()
