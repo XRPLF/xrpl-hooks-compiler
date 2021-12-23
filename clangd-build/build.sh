@@ -3,7 +3,7 @@
 echo running build.sh...
 set -e
 
-# instructions from https://github.com/llvm/llvm-project/tree/main/clang-tools-extra/clangd#building-and-testing-clangd
+# instructions from https://github.com/llvm/llvm-project/tree/main/clang-tools-extra/clangd#building-and-testing-clangd , extended for also building documentation
 export LLVM_ROOT=/mnt/llvm-project
 cd $LLVM_ROOT
 if [ -d build ]; then
@@ -11,7 +11,12 @@ if [ -d build ]; then
 else
     mkdir build
     cd build
-    cmake $LLVM_ROOT/llvm/ -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -G Ninja
+    cmake $LLVM_ROOT/llvm/ -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DLLVM_ENABLE_SPHINX=ON -G Ninja
 fi
 
-cmake --build $LLVM_ROOT/build --target clangd
+if [ $DOC_FLAG -eq 1 ]; then
+    cmake --build $LLVM_ROOT/build --target docs-clang-tools-html
+else
+    cmake --build $LLVM_ROOT/build --target clangd
+    # should also run test here?
+fi
