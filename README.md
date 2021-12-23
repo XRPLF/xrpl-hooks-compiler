@@ -47,7 +47,7 @@ are still needed, so running the `checkout` target should be replaced
 by running
 
 ```bash
-git submodule update --init c2wasm-api jsonrpc-ws-proxy
+git submodule update --init c2wasm-api
 ```
 
 in the top-level directory.
