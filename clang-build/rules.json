@@ -1,0 +1,53 @@
+[
+    {
+	"tail": "wasi-sysroot/include",
+	"whitelist": [
+	    "alloca.h",
+	    "assert.h",
+	    "bits",
+	    "byteswap.h",
+	    "ctype.h",
+	    "endian.h",
+	    "features.h",
+	    "float.h",
+	    "__header_inttypes.h",
+	    "inttypes.h",
+	    "iso646.h",
+	    "limits.h",
+	    "__macro*",
+	    "stdbool.h",
+	    "stddef.h",
+	    "stdint.h",
+	    "stdnoreturn.h",
+	    "__struct*",
+	    "__typedef*",
+	    "values.h"
+	]
+    },
+    {
+	"tail": "clang/14.0.0/include",
+	"blacklist": [
+	    "ammintrin.h",
+	    "__clang_cuda*",
+	    "__clang_hip*",
+	    "cuda_wrappers",
+	    "emmintrin.h",
+	    "fma4intrin.h",
+	    "immintrin.h",
+	    "intrin.h",
+	    "mm_malloc.h",
+	    "nmmintrin.h",
+	    "openmp_wrappers",
+	    "pmmintrin.h",
+	    "ppc_wrappers",
+	    "tgmath.h",
+	    "tmmintrin.h",
+	    "smmintrin.h",
+	    "unwind.h",
+	    "wmmintrin.h",
+	    "x86intrin.h",
+	    "xmmintrin.h",
+	    "xopintrin.h"
+	]
+    }
+]
