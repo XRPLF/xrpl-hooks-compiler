@@ -7,7 +7,7 @@ services:
     ports:
       - "9000:9000"
     working_dir: /app
-    command: [ "/sbin/su-exec", "appuser", "yarn", "dev" ]
+    command: [ "./run.sh", "yarn", "dev" ]
     volumes:
       - ../c2wasm-api/src:/app/src
     environment:

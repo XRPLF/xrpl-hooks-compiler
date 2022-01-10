@@ -10,11 +10,11 @@ COPY c2wasm-api/yarn.lock .
 COPY c2wasm-api/tsconfig.json .
 COPY c2wasm-api/src ./src
 COPY wasi-sdk ./clang/wasi-sdk
+COPY run.sh .
 ADD compile_flags.txt /etc/clangd/compile_flags.txt
 ADD .clang-tidy /work/.clang-tidy
 RUN cp -alf ./clang/includes /work/c && cp -alf clang/wasi-sdk/share/wasi-sysroot/include /usr && mkdir -p /usr/include/clang/14.0.0 && cp -alf clang/wasi-sdk/lib/clang/14.0.0/include /usr/include/clang/14.0.0
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup -h /app && chown appuser:appgroup /app
-USER appuser
 RUN yarn && yarn build
 EXPOSE $PORT
-CMD ["node", "dist/index.js"]
+CMD ["./run.sh", "node", "dist/index.js"]
