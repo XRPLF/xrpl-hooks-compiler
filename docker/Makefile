@@ -6,7 +6,7 @@ build: wasi-sdk c2wasm-api clangd
 	docker build -t $(MAIN_CONTAINER_TAG) .
 
 run:
-	docker run -p 127.0.0.1:3001:3001/tcp -p 127.0.0.1:9000:9000/tcp $(MAIN_CONTAINER_TAG):latest
+	docker run -p 127.0.0.1:9000:9000/tcp $(MAIN_CONTAINER_TAG):latest
 
 shell:
 	docker run -it --entrypoint=/bin/sh $(MAIN_CONTAINER_TAG):latest
