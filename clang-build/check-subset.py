@@ -9,7 +9,7 @@ import sys
 includes = {}
 
 # ignoring #include_next & other complications
-include_rx = re.compile("^\s*#include\s+<([^<>]+)>")
+include_rx = re.compile("^\s*#include\s+[\"<]([^\"<>]+)[\">]")
 
 def is_include_top(directory, tail_list):
     for tail in tail_list:
