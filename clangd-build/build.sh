@@ -18,5 +18,6 @@ if [ $DOC_FLAG -eq 1 ]; then
     cmake --build $LLVM_ROOT/build --target docs-clang-tools-html
 else
     cmake --build $LLVM_ROOT/build --target clangd
+    strip -s bin/clangd
     # should also run test here?
 fi
