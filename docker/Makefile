@@ -11,8 +11,12 @@ run:
 shell:
 	docker run -it --entrypoint=/bin/sh $(MAIN_CONTAINER_TAG):latest
 
-wasi-sdk: ../bin/wasi-sdk
-	cp -a $< .
+../wasi-sdk.ts: ../bin/wasi-sdk
+	-rm -rf wasi-sdk
+	cp -a ../bin/wasi-sdk .
+	date > $@
+
+wasi-sdk: ../wasi-sdk.ts
 
 clangd: ../bin/clangd
 	cp $< .

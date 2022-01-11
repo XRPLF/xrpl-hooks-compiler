@@ -13,3 +13,4 @@ build2:
 install:
 	./copy-subset.py rules.json ../wasi-sdk/build/install/opt/wasi-sdk ../bin/wasi-sdk
 	./check-subset.py rules.json ../bin/wasi-sdk
+	-rm ../wasi-sdk.ts
