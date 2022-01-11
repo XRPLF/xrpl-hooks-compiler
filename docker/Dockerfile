@@ -17,4 +17,4 @@ RUN cp -alf ./clang/includes /work/c && cp -alf clang/wasi-sdk/share/wasi-sysroo
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup -h /app && chown appuser:appgroup /app
 RUN yarn && yarn build
 EXPOSE $PORT
-CMD ["./run.sh", "/usr/local/bin/node", "dist/index.js"]
+CMD ["./run.sh", "node", "dist/index.js"]

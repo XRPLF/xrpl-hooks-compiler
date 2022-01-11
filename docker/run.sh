@@ -6,5 +6,5 @@ set -e
 if [ `id -u` -eq 0 ]; then
     /sbin/su-exec appuser "$@"
 else
-    /bin/sh "$@"
+    "$@"
 fi
