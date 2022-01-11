@@ -9,4 +9,4 @@ if ! [ -L src/llvm-project ]; then
     ln -s /mnt/llvm-project src/llvm-project
 fi
 
-make
+make build strip
