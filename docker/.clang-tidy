@@ -1,2 +1,1 @@
-Checks: bugprone-*,-bugprone-narrowing-conversions,hooks-*,misc-*,-misc-unused-parameters
-
+Checks: bugprone-*,-bugprone-narrowing-conversions,-bugprone-signed-char-misuse,hooks-*,misc-*,-misc-unused-parameters
