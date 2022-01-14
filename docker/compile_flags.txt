@@ -1,3 +1,4 @@
+-xc
 -isystem/usr/include/clang/14.0.0/include
 -Wno-pointer-to-int-cast
 -Wno-int-conversion
