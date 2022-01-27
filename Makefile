@@ -21,5 +21,5 @@ bin.zip: bin
 	zip -r $@ $<
 
 doc.zip: doc
-	$(MAKE) -C clangd-build DOC_FLAG=1 build1 build2 doc-install
+	$(MAKE) -C clangd-build DOC_FLAG=1 doc-clean build1 build2 doc-install
 	zip -r $@ $<

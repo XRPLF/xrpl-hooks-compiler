@@ -12,6 +12,9 @@ build1:
 build2:
 	docker run -v $(realpath ../llvm-project):/mnt/llvm-project -e DOC_FLAG=$(DOC_FLAG) $(CLANGD_BUILD_CONTAINER_TAG):latest
 
+doc-clean:
+	if [ -d ../llvm-project/build/tools/clang/tools/extra/docs/html ]; then rm -rf ../llvm-project/build/tools/clang/tools/extra/docs/html; fi
+
 doc-install:
 	cp ../llvm-project/build/tools/clang/tools/extra/docs/html/_static/*.css ../doc
 	cp ../llvm-project/build/tools/clang/tools/extra/docs/html/_static/*.png ../doc
