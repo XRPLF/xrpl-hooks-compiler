@@ -1,4 +1,4 @@
 Checks: bugprone-*,-bugprone-narrowing-conversions,-bugprone-signed-char-misuse,hooks-*,misc-*,-misc-unused-parameters
 CheckOptions:
   - key: bugprone-unused-return-value.CheckedFunctions
-    value: sto_subfield;sto_subarray;sto_validate
+    value: etxn_burden;sto_subarray;sto_subfield;sto_validate
