@@ -17,9 +17,11 @@ build: bin
 	$(MAKE) -C clangd-build
 	$(MAKE) -C docker
 
+doc-build: doc
+	$(MAKE) -C clangd-build DOC_FLAG=1 doc-clean build1 build2 doc-install
+
 bin.zip: bin
 	zip -r $@ $<
 
-doc.zip: doc
-	$(MAKE) -C clangd-build DOC_FLAG=1 doc-clean build1 build2 doc-install
+doc.zip: doc-build
 	zip -r $@ $<
