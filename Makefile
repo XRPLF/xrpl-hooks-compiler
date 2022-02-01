@@ -23,5 +23,5 @@ doc-build: doc
 bin.zip: bin
 	zip -r $@ $<
 
-doc.zip: doc-build
+doc.zip: doc
 	zip -r $@ $<
