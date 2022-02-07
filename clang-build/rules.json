@@ -3,7 +3,6 @@
 	"tail": "wasi-sysroot/include",
 	"whitelist": [
 	    "alloca.h",
-	    "assert.h",
 	    "bits",
 	    "byteswap.h",
 	    "ctype.h",
