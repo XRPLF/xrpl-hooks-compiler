@@ -34,8 +34,8 @@ the `run` target of Makefile in the docker directory.
 
 Building LLVM (twice - the current setup shares LLVM repo but not the
 build directory between clang & clangd) takes hours, and might not
-work on non-Linux computers (certainly it doesn't work on Mac), so the
-LLVM binaries are maintained in releases of
+even work on computers with less than 8GB of memory (16GB is better),
+so the LLVM binaries are maintained in releases of
 [xrpl-hooks-compiler](https://github.com/eqlabs/xrpl-hooks-compiler/).
 These binaries can be extracted from the file bin.zip in the top-level
 directory, providing the results of running `make` in clang-build and
@@ -67,46 +67,3 @@ unzip bin.zip
 - Run `docker-compose build`
 - Run `docker-compose up` or `docker-compose up -d`
 - This should start server at port `:9000`, the actual compiling endpoint is this: [http://localhost:9000/api/build](localhost:9000/api/build). Note that it takes a while to start.
-
-Endpoint only accepts `HTTP POST`.
-
-You can send for example following payload to endpoint:
-
-```json
-{
-  "output": "wasm",
-  "compress": true,
-  "files": [
-    {
-      "type": "c",
-      "name": "file.c",
-      "options": "-g -O3",
-      "src": "#include <stdio.h>\n\nint main()\n{\n\n   printf(\"Hello World\");\n   return 0;\n}"
-    }
-  ]
-}
-```
-
-Payload itself is quite self-explanatory, but the code you want to compile is under files arrays src property, you can also add some options for the compiler itself. When you POST this payload to the endpoint you should get back following response:
-
-```json
-{
-  "success": true,
-  "message": "Success",
-  "output": "eJzUXQecVcXVv21uee/t7iv7...",
-  "tasks": [
-    {
-      "name": "building file.c",
-      "file": "file.c",
-      "console": "",
-      "success": true,
-      "output": "eJx1UU2LE..."
-    },
-    {
-      "name": "linking wasm",
-      "console": "",
-      "success": true
-    }
-  ]
-}
-```
