@@ -1,0 +1,3 @@
+Security:
+  AccessibleDirectories: [ "/work/c", "/usr/include" ]
+
