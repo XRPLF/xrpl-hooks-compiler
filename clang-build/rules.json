@@ -22,7 +22,7 @@
 	]
     },
     {
-	"tail": "clang/14.0.0/include",
+	"tail": "clang/15.0.0/include",
 	"blacklist": [
 	    "ammintrin.h",
 	    "__clang_cuda*",
