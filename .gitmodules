@@ -1,9 +1,9 @@
-[submodule "wasi-sdk"]
-	path = wasi-sdk
-	url = https://github.com/eqlabs/wasi-sdk.git
 [submodule "c2wasm-api"]
 	path = c2wasm-api
 	url = git@github.com:eqlabs/c2wasm-api.git
 [submodule "llvm-project"]
 	path = llvm-project
 	url = https://github.com/eqlabs/llvm-project.git
+[submodule "wasi-sdk"]
+	path = wasi-sdk
+	url = https://github.com/eqlabs/wasi-sdk.git
