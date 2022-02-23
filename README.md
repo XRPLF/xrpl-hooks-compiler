@@ -17,15 +17,20 @@ image, but
 
 so it's recommended to split the build into 2 steps:
 
-```bash
+```console
 $ make checkout
 
-$ make build
+# make build
 ```
 
 Note that unless you have a credential manager set up for your github
 account, running the `checkout` target will ask for your credentials,
-once for every private submodule.
+once for every private submodule. Also note that the `c2wasm-api`
+submodule is configured for access by a `git@github.com` SSH user (so
+that it can be used by the deployment action) - if you don't have
+credentials for this user (which you probably don't), change the
+submodule's URL in your local `.git/config` directory to
+`https://github.com/eqlabs/c2wasm-api.git` to allow the checkout.
 
 The final container is called `xrpl-hooks-compiler` and can be run by
 the `run` target of Makefile in the docker directory.
