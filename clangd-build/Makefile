@@ -22,3 +22,6 @@ doc-install:
 
 install:
 	cp ../llvm-project/build/bin/clangd ../bin
+
+clean:
+	-rm -rf ../llvm-project/build
