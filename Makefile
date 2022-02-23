@@ -1,8 +1,13 @@
 all: checkout build
 
 # Checks out submodules. Run after git clone.
+# `git submodule update --init --recursive` looks like it should be
+# sufficient, but actually fails to update wasi-sdk (not always but
+# most of the time)...
 checkout:
-	git submodule update --init --recursive
+	git submodule update --init --recursive c2wasm-api
+	git submodule update --init --recursive llvm-project
+	git submodule update --init --recursive wasi-sdk
 
 bin:
 	mkdir $@
