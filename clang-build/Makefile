@@ -24,4 +24,4 @@ wasi-sdk.filter: wasi-sdk.copy rules.json
 install: wasi-sdk.filter
 
 clean:
-	-rm -rf wasi-sdk wasi-sdk.copy wasi-sdk.filter
+	-rm -rf ../wasi-sdk/build wasi-sdk wasi-sdk.copy wasi-sdk.filter
