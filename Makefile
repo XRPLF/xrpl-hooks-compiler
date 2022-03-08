@@ -30,3 +30,9 @@ bin.zip: bin
 
 doc.zip: doc
 	zip -r $@ $<
+
+clean:
+	$(MAKE) -C clang-build clean
+	$(MAKE) -C clangd-build clean
+	$(MAKE) -C docker clean
+	-rm -rf bin doc
