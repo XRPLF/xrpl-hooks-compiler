@@ -11,20 +11,41 @@
 	    "float.h",
 	    "iso646.h",
 	    "limits.h",
-	    "__macro*",
+            "__macro_PAGESIZE.h",
 	    "stdbool.h",
 	    "stddef.h",
 	    "stdint.h",
 	    "stdnoreturn.h",
-	    "__struct*",
-	    "__typedef*",
+	    "__struct_iovec.h",
+	    "__struct_timeval.h",
+	    "__struct_timespec.h",
+            "__typedef_clock_t.h",
+            "__typedef_clockid_t.h",
+            "__typedef_suseconds_t.h",
+            "__typedef_sigset_t.h",
+            "__typedef_time_t.h",
 	    "values.h"
 	]
     },
     {
+	"tail": "wasi-sysroot/include/bits",
+	"whitelist": [
+	    "alltypes.h",
+            "float.h",
+            "limits.h",
+            "stdint.h"
+        ]
+    },
+    {
 	"tail": "clang/15.0.0/include",
 	"blacklist": [
+	    "adxintrin.h",
+            "altivec.h",
 	    "ammintrin.h",
+	    "amxintrin.h",
+            "avx2intrin.h",
+            "avx3intrin.h",
+            "avx512*",
 	    "__clang_cuda*",
 	    "__clang_hip*",
 	    "cuda_wrappers",
