@@ -1,5 +1,5 @@
 -xc
--isystem/usr/include/clang/15.0.0/include
+-isystem/usr/lib/clang/15.0.0/include
 -Wno-pointer-to-int-cast
 -Wno-int-conversion
 -Werror=implicit-function-declaration
