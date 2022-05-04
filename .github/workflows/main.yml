@@ -1,0 +1,70 @@
+name: c2wasm-api to Heroku CD
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+#set environment variables
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  APP_NAME: ${{ 'xrpl-c2wasm-api' }}
+
+jobs:
+  build:
+    name: Test build image
+    runs-on: ubuntu-18.04
+    steps:
+      # Clone the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get submodules
+        env:
+          SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "$SSH_KEY_SUBMODULE"; git submodule update --init --recursive c2wasm-api
+
+      # - name: SSH Debug
+      #   uses: lhotari/action-upterm@v1
+
+      - name: Download bin.zip
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "eqlabs/xrpl-hooks-compiler"
+          version: "tags/v1.18"
+          file: "bin.zip"
+          target: "./bin.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Uncomment this if you want to debug pipeline
+      # - name: SSH Debug
+      #   uses: lhotari/action-upterm@v1
+
+      - name: Unzip binaries
+        run: |
+          unzip -o bin.zip
+
+      - name: Local build
+        run: |
+          cd docker
+          make c2wasm-api && make clangd && make wasi-sdk
+          docker build . --tag web
+
+      # Build Docker image
+      - name: Docker build
+        if: success() && contains('refs/heads/master', github.ref)
+        run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+
+      # Push the Docker image to Heroku Container Registry
+      - name: Publish
+        if: success() && contains('refs/heads/master', github.ref)
+        run: |
+          cd docker
+          make c2wasm-api && make clangd && make wasi-sdk
+          heroku container:push web -a $APP_NAME
+          make clean
+          heroku container:release web -a $APP_NAME
