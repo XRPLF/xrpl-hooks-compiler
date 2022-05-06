@@ -2,7 +2,7 @@
 
 MAIN_CONTAINER_TAG?=xrpl-hooks-compiler
 
-build: wasi-sdk c2wasm-api clangd
+build: wasi-sdk c2wasm-api clangd cleaner
 	docker build -t $(MAIN_CONTAINER_TAG) .
 
 run:
@@ -19,6 +19,9 @@ shell:
 wasi-sdk: ../wasi-sdk.ts
 
 clangd: ../bin/clangd
+	cp $< .
+
+cleaner: ../bin/cleaner
 	cp $< .
 
 c2wasm-api: ../c2wasm-api
