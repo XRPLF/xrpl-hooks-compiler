@@ -51,7 +51,7 @@ jobs:
       - name: Local build
         run: |
           cd docker
-          make c2wasm-api && make clangd && make wasi-sdk
+          make dependencies
           docker build . --tag web
 
       # Build Docker image
@@ -64,7 +64,7 @@ jobs:
         if: success() && contains('refs/heads/master', github.ref)
         run: |
           cd docker
-          make c2wasm-api && make clangd && make wasi-sdk
+          make dependencies
           heroku container:push web -a $APP_NAME
           make clean
           heroku container:release web -a $APP_NAME
