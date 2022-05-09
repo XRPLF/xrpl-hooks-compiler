@@ -44,7 +44,7 @@ jobs:
       - name: Local build
         run: |
           cd docker
-          make c2wasm-api && make clangd && make wasi-sdk
+          make c2wasm-api && make clangd && make wasi-sdk && make cleaner
           docker build . --tag web
 
       # Build Docker image
