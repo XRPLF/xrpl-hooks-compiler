@@ -28,7 +28,7 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: "eqlabs/xrpl-hooks-compiler"
-          version: "tags/v1.19"
+          version: "tags/v1.20"
           file: "bin.zip"
           target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
