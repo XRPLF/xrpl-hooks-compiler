@@ -4,3 +4,6 @@
 [submodule "wasi-sdk"]
 	path = wasi-sdk
 	url = https://github.com/eqlabs/wasi-sdk.git
+[submodule "hook-cleaner-c"]
+	path = hook-cleaner-c
+	url = https://github.com/RichardAH/hook-cleaner-c
