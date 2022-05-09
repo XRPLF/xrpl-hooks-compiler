@@ -17,17 +17,6 @@ jobs:
     name: Test build image
     runs-on: ubuntu-18.04
     steps:
-      # Clone the repository
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Get submodules
-        env:
-          SSH_KEY_SUBMODULE: ${{secrets.SSH_KEY_C2WASM_API}}
-        run: |
-          eval `ssh-agent -s`
-          ssh-add - <<< "$SSH_KEY_SUBMODULE"; git submodule update --init --recursive c2wasm-api
-
       # - name: SSH Debug
       #   uses: lhotari/action-upterm@v1
 
