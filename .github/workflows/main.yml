@@ -17,6 +17,10 @@ jobs:
     name: Test build image
     runs-on: ubuntu-18.04
     steps:
+      # Clone the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+
       # - name: SSH Debug
       #   uses: lhotari/action-upterm@v1
 
@@ -24,7 +28,7 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: "eqlabs/xrpl-hooks-compiler"
-          version: "tags/v1.20"
+          version: "tags/v1.19"
           file: "bin.zip"
           target: "./bin.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +44,7 @@ jobs:
       - name: Local build
         run: |
           cd docker
-          make dependencies
+          make c2wasm-api && make clangd && make wasi-sdk
           docker build . --tag web
 
       # Build Docker image
@@ -53,7 +57,7 @@ jobs:
         if: success() && contains('refs/heads/master', github.ref)
         run: |
           cd docker
-          make dependencies
+          make c2wasm-api && make clangd && make wasi-sdk
           heroku container:push web -a $APP_NAME
           make clean
           heroku container:release web -a $APP_NAME
