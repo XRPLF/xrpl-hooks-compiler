@@ -23,7 +23,6 @@ clangd: ../bin/clangd
 
 c2wasm-api: ../c2wasm-api
 	cp -LR $< .
-	rm -rf c2wasm-api/.git
 
 clean:
 	-rm -rf c2wasm-api clangd wasi-sdk

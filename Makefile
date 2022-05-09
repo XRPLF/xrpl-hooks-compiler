@@ -5,7 +5,6 @@ all: checkout build
 # sufficient, but actually fails to update wasi-sdk (not always but
 # most of the time)...
 checkout:
-	git submodule update --init --recursive c2wasm-api
 	git submodule update --init --recursive llvm-project
 	git submodule update --init --recursive wasi-sdk
 
