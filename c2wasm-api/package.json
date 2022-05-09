@@ -1,0 +1,27 @@
+{
+  "name": "hooks-compile-api",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@types/ws": "^8.2.2",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.4"
+  },
+  "scripts": {
+    "start": "node ./src/index.ts",
+    "dev": "ts-node-dev --respawn ./src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "fastify": "^3.22.1",
+    "fastify-cors": "^6.0.2",
+    "fastify-websocket": "^4.0.0",
+    "tsc": "^2.0.3",
+    "vscode-ws-jsonrpc": "^0.2.0",
+    "ws": "^8.3.0",
+    "zod": "^3.11.6"
+  }
+}
