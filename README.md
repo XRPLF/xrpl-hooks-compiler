@@ -1,8 +1,8 @@
 # XRPL Hooks compiler
 
-This repository contains build scripts for the docker image with clang
-& clangd, plus git submodules of the projects actually going into the
-image.
+This repository contains build scripts for the docker image with Hooks
+C compiler and Language Server, git submodules of the projects
+actually going into the image and their web API.
 
 ## Getting Started
 
@@ -25,12 +25,7 @@ $ make checkout
 
 Note that unless you have a credential manager set up for your github
 account, running the `checkout` target will ask for your credentials,
-once for every private submodule. Also note that the `c2wasm-api`
-submodule is configured for access by a `git@github.com` SSH user (so
-that it can be used by the deployment action) - if you don't have
-credentials for this user (which you probably don't), change the
-submodule's URL in your local `.git/config` directory to
-`https://github.com/eqlabs/c2wasm-api.git` to allow the checkout.
+once for every private submodule.
 
 The final container is called `xrpl-hooks-compiler` and can be run by
 the `run` target of Makefile in the docker directory.
@@ -41,21 +36,14 @@ Building LLVM (twice - the current setup shares LLVM repo but not the
 build directory between clang & clangd) takes hours, and might not
 even work on computers with less than 8GB of memory (16GB is better),
 so the LLVM binaries are maintained in releases of
-[xrpl-hooks-compiler](https://github.com/eqlabs/xrpl-hooks-compiler/).
+[xrpl-hooks-compiler](https://github.com/XRPLF/xrpl-hooks-compiler/).
 These binaries can be extracted from the file bin.zip in the top-level
 directory, providing the results of running `make` in clang-build,
 clangd-build and cleaner-build directories, so that running the
 top-level make `build` target can be replaced by running just the
 (default) make `build` target in the docker directory. This also
 allows skipping the checkout of the `llvm-project`, `wasi-sdk` and
-`hook-cleaner-c` submodules; the API submodule is still needed, so
-running the `checkout` target should be replaced by running
-
-```bash
-git submodule update --init c2wasm-api
-```
-
-in the top-level directory.
+`hook-cleaner-c` submodules.
 
 ## API Wrapper or c2wasm-api
 
