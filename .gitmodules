@@ -1,9 +1,9 @@
 [submodule "llvm-project"]
 	path = llvm-project
-	url = https://github.com/eqlabs/llvm-project.git
+	url = https://github.com/XRPLF/llvm-project
 [submodule "wasi-sdk"]
 	path = wasi-sdk
-	url = https://github.com/eqlabs/wasi-sdk.git
+	url = https://github.com/XRPLF/wasi-sdk
 [submodule "hook-cleaner-c"]
 	path = hook-cleaner-c
 	url = https://github.com/RichardAH/hook-cleaner-c
