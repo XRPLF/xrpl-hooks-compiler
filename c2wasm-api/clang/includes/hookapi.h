@@ -193,7 +193,7 @@ extern int64_t etxn_details        (uint32_t write_ptr,  uint32_t write_len);
  * @param tx_byte_count The size of the emitted transaction in bytes
  * @return The minimum fee in drops this transaction should pay to succeed
  */
-extern int64_t etxn_fee_base       (uint32_t tx_byte_count);
+extern int64_t etxn_fee_base       (uint32_t read_ptr, uint32_t read_len);
 
 /**
  * Inform xrpld that you will be emitting at most @count@ transactions during the course of this hook execution.
@@ -362,13 +362,19 @@ extern int64_t ledger_seq          (void);
 
 extern int64_t ledger_last_hash    (uint32_t write_ptr,  uint32_t write_len);
 
+extern int64_t ledger_last_time    (void);
+
+extern int64_t meta_slot           (uint32_t slot_no);
+
 /**
- * Retrieve a nonce for use in an emitted transaction (or another task). Can be called repeatedly for multiple nonces.
+ * Retrieve a nonce for use in an emitted transaction. Can be called repeatedly for multiple nonces.
  * @param write_ptr A buffer of at least 32 bytes to write into.
  * @param write_len The length of that buffer
  * @return The number of bytes written into the buffer of a negative integer if an error occured.
  */
-extern int64_t nonce               (uint32_t write_ptr,  uint32_t write_len);
+extern int64_t etxn_nonce          (uint32_t write_ptr,  uint32_t write_len);
+
+extern int64_t ledger_nonce        (uint32_t write_ptr, uint32_t write_len);
 
 /**
  * Retrieve the account the hook is running on.
@@ -377,6 +383,8 @@ extern int64_t nonce               (uint32_t write_ptr,  uint32_t write_len);
  * @return The number of bytes written into the buffer of a negative integer if an error occured.
  */
 extern int64_t hook_account        (uint32_t write_ptr,  uint32_t write_len);
+
+extern int64_t hook_again          (void);
 
 /**
  * Retrieve the 32 byte namespace biased SHA512H of the currently executing Hook.
