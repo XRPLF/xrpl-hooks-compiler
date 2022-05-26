@@ -183,7 +183,7 @@ function link_c_files(source_files: string[], compile_options: string, link_opti
 }
 
 function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
-  const cmd = 'cleaner ' + inplace;
+  const cmd = 'hook-cleaner ' + inplace;
   const out = openSync(cwd + '/cleanout.log', 'w');
   let error = '';
   let success = true;
