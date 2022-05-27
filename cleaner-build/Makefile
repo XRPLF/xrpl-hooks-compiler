@@ -11,7 +11,7 @@ build2:
 	docker run -v $(realpath ../hook-cleaner-c):/mnt/hook-cleaner $(CLEANER_BUILD_CONTAINER_TAG):latest
 
 install:
-	cp ../hook-cleaner-c/cleaner ../bin
+	cp ../hook-cleaner-c/hook-cleaner ../bin
 
 clean:
-	-rm ../hook-cleaner-c/cleaner
+	-rm ../hook-cleaner-c/hook-cleaner

@@ -6,4 +6,4 @@
 	url = https://github.com/XRPLF/wasi-sdk
 [submodule "hook-cleaner-c"]
 	path = hook-cleaner-c
-	url = https://github.com/RichardAH/hook-cleaner-c
+	url = https://github.com/XRPLF/hook-cleaner-c
