@@ -1,6 +1,6 @@
 Checks: bugprone-*,-bugprone-narrowing-conversions,-bugprone-signed-char-misuse,hooks-*,misc-*,-misc-unused-parameters
 CheckOptions:
   - key: bugprone-unused-return-value.CheckedFunctions
-    value: etxn_burden;fee_base;float_compare;float_divide;float_exponent;float_exponent_set;float_int;float_invert;float_mantissa;float_mantissa_set;float_mulratio;float_multiply;float_negate;float_one;float_set;float_sign;float_sign_set;float_sum;hook_pos;ledger_seq;otxn_burden;otxn_generation;otxn_type;slot_count;slot_float;slot_type;slot_size;sto_subarray;sto_subfield;sto_validate
+    value: etxn_burden;fee_base;float_compare;float_divide;float_exponent;float_exponent_set;float_int;float_invert;float_mantissa;float_mantissa_set;float_mulratio;float_multiply;float_negate;float_one;float_set;float_sign;float_sign_set;float_sum;hook_pos;ledger_last_time;ledger_seq;otxn_burden;otxn_generation;otxn_type;slot_count;slot_float;slot_type;slot_size;sto_subarray;sto_subfield;sto_validate
   - key: bugprone-reserved-identifier.AllowedIdentifiers
     value: _g
