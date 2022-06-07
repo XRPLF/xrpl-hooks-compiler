@@ -11,6 +11,7 @@ COPY c2wasm-api/tsconfig.json .
 COPY c2wasm-api/src ./src
 COPY wasi-sdk ./clang/wasi-sdk
 COPY hook-cleaner /usr/bin
+COPY wasm-opt /usr/bin
 COPY run.sh .
 ADD compile_flags.txt /etc/clangd/compile_flags.txt
 ADD .clang-tidy /work/.clang-tidy
