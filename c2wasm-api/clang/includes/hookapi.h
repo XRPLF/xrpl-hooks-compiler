@@ -351,6 +351,21 @@ extern int64_t  float_sign_set      (int64_t float1,     uint32_t sign);
 extern int64_t  float_int           (int64_t float1,     uint32_t decimal_places, uint32_t absolute);
 
 /**
+ * Compute the nth root of an XFL number.
+ * @param float1 An XFL floating point enclosing number
+ * @param n The root to compute, for example 2 is a square root.
+ * @return The computed nth root, or a negative integer on error.
+ */
+extern int64_t  float_root          (int64_t float1, uint32_t n);
+
+/**
+ * Compute the decimal log of an XFL.
+ * @param float1 An XFL floating point enclosing number
+ * @return The computed logarithm, or a negative integer on error.
+ */
+extern int64_t  float_log           (int64_t float1);
+
+/**
  * Retrive the currently recommended minimum fee for a transaction to succeed.
  */
 extern int64_t fee_base            (void);
@@ -370,17 +385,36 @@ extern int64_t meta_slot           (uint32_t slot_no);
  * Retrieve a nonce for use in an emitted transaction. Can be called repeatedly for multiple nonces.
  * @param write_ptr A buffer of at least 32 bytes to write into.
  * @param write_len The length of that buffer
- * @return The number of bytes written into the buffer of a negative integer if an error occured.
+ * @return The number of bytes written into the buffer, or a negative integer if an error occured.
  */
 extern int64_t etxn_nonce          (uint32_t write_ptr,  uint32_t write_len);
 
+/**
+ * Generate a 32 byte nonce for use in an emitted transaction.
+ * @param write_ptr A buffer of at least 32 bytes to write into.
+ * @param write_len The length of that buffer
+ * @return The number of bytes written into the buffer, or a negative integer if an error occured.
+ */
 extern int64_t ledger_nonce        (uint32_t write_ptr, uint32_t write_len);
+
+/**
+ * Search for a keylet within a specified range on the current ledger.
+ * @param write_ptr Pointer to a buffer to store the output serialised Keylet.
+ * @param write_len Length of the output buffer. Must be 34 bytes.
+ * @param lread_ptr Pointer to the 34 byte serialised Keylet that represents the lower boundary of the Keylet range to search.
+ * @param lread_len Always 34 bytes.
+ * @param hread_ptr Pointer to the 34 byte serialised Keylet that represents the upper boundary of the Keylet range to search.
+ * @param hread_len Always 34 bytes.
+ * @return The number of bytes written into the buffer (34) on success, or a negative integer if an error occured.
+ */
+extern int64_t ledger_keylet       (uint32_t write_ptr, uint32_t write_len, uint32_t lread_ptr,
+				    uint32_t lread_len, uint32_t hread_ptr, uint32_t hread_len);
 
 /**
  * Retrieve the account the hook is running on.
  * @param write_ptr A buffer of at least 20 bytes to write into.
  * @param write_len The length of that buffer
- * @return The number of bytes written into the buffer of a negative integer if an error occured.
+ * @return The number of bytes written into the buffer, or a negative integer if an error occured.
  */
 extern int64_t hook_account        (uint32_t write_ptr,  uint32_t write_len);
 
