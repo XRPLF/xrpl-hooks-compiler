@@ -1,21 +1,21 @@
 # API that compiles C code to WASM
 
-This repository contains a webserver for a C to WASM compiler and
+This directory contains a webserver for a C to WASM compiler and
 Language Server (i.e. interactive linting).  Server is built with
 [Fastify](https://www.fastify.io/), fast and low overhead framework
 for Node.js
 
-Compiling itself is done with clang, Language Server is clangd
-connected over WebSocket.
+Compiling itself is done with clang (plus some hook-specific
+post-processing), Language Server is clangd connected over WebSocket.
 
 
 ## Development
 
 If you want to try this project follow these steps:
 
-- Clone the repo: `git clone git@github.com:eqlabs/c2wasm-api.git`
 - Install JS dependencies by running `yarn` or `yarn install` you can use npm as well
-- Install native dependencies (wasi-sdk & clangd) as automated by the docker container construction in https://github.com/eqlabs/xrpl-hooks-compiler and run `yarn dev`; alternatively, just run the docker instance from there
+- Install Hook API headers by running `./copyheaders.sh` as root
+- Install native dependencies (wasi-sdk & clangd) as automated by the docker container construction in the parent directory and run `yarn dev` here; alternatively, just run the docker instance from ../docker
 
 This should start server at port `:9000`, the actual compiling endpoint is this:
 [http://localhost:9000/api/build](localhost:9000/api/build)
