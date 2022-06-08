@@ -28,6 +28,8 @@ hook-cleaner: ../bin/hook-cleaner
 
 c2wasm-api: ../c2wasm-api
 	cp -LR $< .
+	mkdir -p c2wasm-api/clang/includes
+	cp ../xrpld-hooks/hook/examples/*.h c2wasm-api/clang/includes
 
 clean:
 	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner
