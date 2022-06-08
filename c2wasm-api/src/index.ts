@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 import fs from 'fs';
-import { mkdirSync, writeFileSync, existsSync, openSync, closeSync, readFileSync, renameSync, rmSync, unlinkSync, fstat } from "fs";
+import { mkdirSync, writeFileSync, existsSync, openSync, closeSync, readFileSync, rmSync, unlinkSync, fstat } from "fs";
 import { deflateSync } from "zlib";
 import { execSync } from "child_process";
 import { z } from 'zod';
@@ -100,9 +100,13 @@ function shell_exec(cmd: string, cwd: string) {
   return result;
 }
 
-function get_optimization_options(options: string) {
+function get_clang_options(options: string) {
+  const clang_flags = `--sysroot=${sysroot} -xc -I/app/clang/includes -fdiagnostics-print-source-range-info -Werror=implicit-function-declaration`;
   const optimization_options = [
-    /* default '-O0' not included */ '-O1', '-O2', '-O3', '-O4', '-Os'
+    '-O0', '-O1', '-O2', '-O3', '-O4', '-Os'
+  ];
+  const miscellaneous_options = [
+    '-ffast-math', '-fno-inline', '-std=c99', '-std=c89'
   ];
 
   let safe_options = '';
@@ -112,16 +116,10 @@ function get_optimization_options(options: string) {
     }
   }
 
-  return safe_options;
-}
+  if (!safe_options) {
+    safe_options += ' -O0';
+  }
 
-function get_clang_options(options: string) {
-  const clang_flags = `--sysroot=${sysroot} -xc -I/app/clang/includes -fdiagnostics-print-source-range-info -Werror=implicit-function-declaration`;
-  const miscellaneous_options = [
-    '-ffast-math', '-fno-inline', '-std=c99', '-std=c89'
-  ];
-
-  let safe_options = '';
   for (let o of miscellaneous_options) {
     if (options.includes(o)) {
       safe_options += ' ' + o;
@@ -184,29 +182,6 @@ function link_c_files(source_files: string[], compile_options: string, link_opti
   return true;
 }
 
-function optimize_wasm(cwd: string, inplace: string, opt_options: string, result_obj: Task) {
-  const unopt = cwd + '/unopt.wasm';
-  const cmd = 'wasm-opt ' + opt_options + ' -o ' + inplace + ' ' + unopt;
-  const out = openSync(cwd + '/opt.log', 'w');
-  let error = '';
-  let success = true;
-  try {
-    renameSync(inplace, unopt);
-    execSync(cmd, { cwd, stdio: [null, out, out], });
-  } catch (ex: unknown) {
-    success = false;
-    if (ex instanceof Error) {
-      error = ex?.message;
-    }
-  } finally {
-    closeSync(out);
-  }
-  const out_msg = readFileSync(cwd + '/opt.log').toString() || error;
-  result_obj.console = sanitize_shell_output(out_msg);
-  result_obj.success = success;
-  return success;
-}
-
 function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
   const cmd = 'hook-cleaner ' + inplace;
   const out = openSync(cwd + '/cleanout.log', 'w');
@@ -224,7 +199,7 @@ function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
   }
   const out_msg = readFileSync(cwd + '/cleanout.log').toString() || error;
   result_obj.console = sanitize_shell_output(out_msg);
-  result_obj.success = success;
+  result_obj.success = false;
   return success;
 }
 
@@ -297,17 +272,6 @@ function build_project(project: RequestBody, base: string) {
   build_result.tasks.push(link_result_obj);
   if (!link_c_files(sources, options || '', link_options || '', dir, result, link_result_obj)) {
     return complete(false, 'Build error');
-  }
-
-  const opt_options = get_optimization_options(options || '');
-  if (opt_options) {
-    const opt_obj = {
-      name: 'optimizing wasm'
-    };
-    build_result.tasks.push(opt_obj);
-    if (!optimize_wasm(dir, result, opt_options, opt_obj)) {
-      return complete(false, 'Optimization error');
-    }
   }
 
   if (strip) {
