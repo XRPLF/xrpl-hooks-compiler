@@ -7,3 +7,6 @@
 [submodule "hook-cleaner-c"]
 	path = hook-cleaner-c
 	url = https://github.com/XRPLF/hook-cleaner-c
+[submodule "xrpld-hooks"]
+	path = xrpld-hooks
+	url = https://github.com/XRPL-Labs/xrpld-hooks
