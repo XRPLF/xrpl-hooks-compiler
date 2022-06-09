@@ -10,8 +10,8 @@
 #define HOOKMACROS_INCLUDED 1
 
 // hook developers should use this guard macro, simply GUARD(<maximum iterations>)
-#define GUARD(maxiter) _g(__LINE__, (maxiter)+1)
-#define GUARDM(maxiter, n) _g(((__LINE__ << 16) + n), (maxiter)+1)
+#define GUARD(maxiter) _g((1ULL << 31U) + __LINE__, (maxiter)+1)
+#define GUARDM(maxiter, n) _g(( (1ULL << 31U) + (__LINE__ << 16) + n), (maxiter)+1)
 
 #define SBUF(str) (uint32_t)(str), sizeof(str)
 
@@ -29,14 +29,13 @@
 unsigned char buf[sizeof(str) + 21];\
 int out_len = 0;\
 {\
-    volatile int _ten = 10;\
     int i = 0;\
     for (; GUARDM(sizeof(str),1),i < sizeof(str); ++i)\
         (buf)[i] = str[i];\
     if ((buf)[sizeof(str)-1] == 0) i--;\
     if ((num) < 0) (buf)[i++] = '-';\
     uint64_t unsigned_num = (uint64_t)( (num) < 0 ? (num) * -1 : (num) );\
-    uint64_t j = _ten * 1000000000000000000ULL;\
+    uint64_t j = 10000000000000000000ULL;\
     int start = 1;\
     for (; GUARDM(20,2), unsigned_num > 0 && j > 0; j /= 10)\
     {\
@@ -54,7 +53,6 @@ int out_len = 0;\
 unsigned char buff[sizeof(str) + sizeof(str2) + 42];\
 int out_len = 0;\
 {\
-    volatile int _ten = 10;\
     unsigned char* buf = buff;\
     int i = 0;\
     for (; GUARDM(sizeof(str),1),i < sizeof(str); ++i)\
@@ -62,7 +60,7 @@ int out_len = 0;\
     if ((buf)[sizeof(str)-1] == 0) i--;\
     if ((num) < 0) (buf)[i++] = '-';\
     uint64_t unsigned_num = (uint64_t)( (num) < 0 ? (num) * -1 : (num) );\
-    uint64_t j = _ten * 1000000000000000000ULL;\
+    uint64_t j = 10000000000000000000ULL;\
     int start = 1;\
     for (; GUARDM(20,2), unsigned_num > 0 && j > 0; j /= 10)\
     {\
@@ -80,7 +78,7 @@ int out_len = 0;\
     if ((buf)[sizeof(str2)-1] == 0) i--;\
     if ((num2) < 0) (buf)[i++] = '-';\
     unsigned_num = (uint64_t)( (num2) < 0 ? (num2) * -1 : (num2) );\
-    j = _ten * 1000000000000000000ULL;\
+    j = 10000000000000000000ULL;\
     start = 1;\
     for (; GUARDM(20,4), unsigned_num > 0 && j > 0; j /= 10)\
     {\
@@ -94,16 +92,10 @@ int out_len = 0;\
     out_len += i;\
 }
 
-#ifdef NDEBUG
-#define DEBUG 0
-#else
-#define DEBUG 1
-#endif
-
-#define TRACEVAR(v) if (DEBUG) trace_num((uint32_t)(#v), (uint32_t)(sizeof(#v) - 1), (int64_t)v);
-#define TRACEHEX(v) if (DEBUG) trace((uint32_t)(#v), (uint32_t)(sizeof(#v) - 1), (uint32_t)(v), (uint32_t)(sizeof(v)), 1);
-#define TRACEXFL(v) if (DEBUG) trace_float((uint32_t)(#v), (uint32_t)(sizeof(#v) - 1), (int64_t)v);
-#define TRACESTR(v) if (DEBUG) trace((uint32_t)(#v), (uint32_t)(sizeof(#v) - 1), (uint32_t)(v), sizeof(v), 0);
+#define TRACEVAR(v) trace_num((uint32_t)(#v), (uint32_t)(sizeof(#v) - 1), (int64_t)v);
+#define TRACEHEX(v) trace((uint32_t)(#v), (uint32_t)(sizeof(#v)), (uint32_t)(v), (uint32_t)(sizeof(v)), 1);
+#define TRACEXFL(v) trace_float((uint32_t)(#v), (uint32_t)(sizeof(#v)), (int64_t)v);
+#define TRACESTR(v) trace((uint32_t)(#v), (uint32_t)(sizeof(#v)), (uint32_t)(v), sizeof(v), 0);
 
 #define CLEARBUF(b)\
 {\
@@ -129,6 +121,7 @@ int out_len = 0;\
 // when using this macro buf1len may be dynamic but buf2len must be static
 // provide n >= 1 to indicate how many times the macro will be hit on the line of code
 // e.g. if it is in a loop that loops 10 times n = 10
+
 #define BUFFER_EQUAL_GUARD(output, buf1, buf1len, buf2, buf2len, n)\
 {\
     output = ((buf1len) == (buf2len) ? 1 : 0);\
@@ -224,7 +217,7 @@ int out_len = 0;\
 
 
 #define INT64_FROM_BUF(buf)\
-   ((((uint64_t)((buf)[0]&0x7FU) << 56) +\
+   ((((uint64_t)((buf)[0]&7FU) << 56) +\
      ((uint64_t)((buf)[1]) << 48) +\
      ((uint64_t)((buf)[2]) << 40) +\
      ((uint64_t)((buf)[3]) << 32) +\
@@ -248,6 +241,8 @@ int out_len = 0;\
 }
 
 #define ttPAYMENT 0
+#define ttCHECK_CREATE 16
+#define ttNFT_ACCEPT_OFFER 29
 #define tfCANONICAL 0x80000000UL
 
 #define atACCOUNT 1U
@@ -381,6 +376,12 @@ int out_len = 0;\
 #define _08_03_ENCODE_ACCOUNT_DST(buf_out, account_id)\
     ENCODE_ACCOUNT_DST(buf_out, account_id);
 
+#define ENCODE_ACCOUNT_OWNER_SIZE 22
+#define ENCODE_ACCOUNT_OWNER(buf_out, account_id) \
+    ENCODE_ACCOUNT(buf_out, account_id, atOWNER);
+#define _08_02_ENCODE_ACCOUNT_OWNER(buf_out, account_id) \
+    ENCODE_ACCOUNT_OWNER(buf_out, account_id);
+
 #define ENCODE_UINT32_COMMON_SIZE 5U
 #define ENCODE_UINT32_COMMON(buf_out, i, field)\
     {\
@@ -480,13 +481,17 @@ int out_len = 0;\
     ENCODE_SIGNING_PUBKEY_NULL(buf_out );
 
 
-#define PREPARE_PAYMENT_SIMPLE_SIZE 270
-#define PREPARE_PAYMENT_SIMPLE(buf_out_master, drops_amount_raw, drops_fee_raw, to_address, dest_tag_raw, src_tag_raw)\
+#ifdef HAS_CALLBACK
+#define PREPARE_PAYMENT_SIMPLE_SIZE 270U
+#else
+#define PREPARE_PAYMENT_SIMPLE_SIZE 248U
+#endif
+
+#define PREPARE_PAYMENT_SIMPLE(buf_out_master, drops_amount_raw, to_address, dest_tag_raw, src_tag_raw)\
     {\
         uint8_t* buf_out = buf_out_master;\
         uint8_t acc[20];\
         uint64_t drops_amount = (drops_amount_raw);\
-        uint64_t drops_fee = (drops_fee_raw);\
         uint32_t dest_tag = (dest_tag_raw);\
         uint32_t src_tag = (src_tag_raw);\
         uint32_t cls = (uint32_t)ledger_seq();\
@@ -499,19 +504,25 @@ int out_len = 0;\
         _02_26_ENCODE_FLS                  (buf_out, cls + 1                        );      /* uint32  | size   6 */ \
         _02_27_ENCODE_LLS                  (buf_out, cls + 5                        );      /* uint32  | size   6 */ \
         _06_01_ENCODE_DROPS_AMOUNT         (buf_out, drops_amount                   );      /* amount  | size   9 */ \
-        _06_08_ENCODE_DROPS_FEE            (buf_out, drops_fee                      );      /* amount  | size   9 */ \
+        uint8_t* fee_ptr = buf_out;\
+        _06_08_ENCODE_DROPS_FEE            (buf_out, 0                              );      /* amount  | size   9 */ \
         _07_03_ENCODE_SIGNING_PUBKEY_NULL  (buf_out                                 );      /* pk      | size  35 */ \
         _08_01_ENCODE_ACCOUNT_SRC          (buf_out, acc                            );      /* account | size  22 */ \
         _08_03_ENCODE_ACCOUNT_DST          (buf_out, to_address                     );      /* account | size  22 */ \
-        etxn_details((uint32_t)buf_out, 138);                                               /* emitdet | size 138 */ \
+        int64_t edlen = etxn_details((uint32_t)buf_out, PREPARE_PAYMENT_SIMPLE_SIZE);       /* emitdet | size 1?? */ \
+        int64_t fee = etxn_fee_base(buf_out_master, PREPARE_PAYMENT_SIMPLE_SIZE);                                    \ 
+        _06_08_ENCODE_DROPS_FEE            (fee_ptr, fee                            );                               \
     }
 
+#ifdef HAS_CALLBACK
 #define PREPARE_PAYMENT_SIMPLE_TRUSTLINE_SIZE 309
-#define PREPARE_PAYMENT_SIMPLE_TRUSTLINE(buf_out_master, tlamt, drops_fee_raw, to_address, dest_tag_raw, src_tag_raw)\
+#else
+#define PREPARE_PAYMENT_SIMPLE_TRUSTLINE_SIZE 287
+#endif
+#define PREPARE_PAYMENT_SIMPLE_TRUSTLINE(buf_out_master, tlamt, to_address, dest_tag_raw, src_tag_raw)\
     {\
         uint8_t* buf_out = buf_out_master;\
         uint8_t acc[20];\
-        uint64_t drops_fee = (drops_fee_raw);\
         uint32_t dest_tag = (dest_tag_raw);\
         uint32_t src_tag = (src_tag_raw);\
         uint32_t cls = (uint32_t)ledger_seq();\
@@ -524,11 +535,14 @@ int out_len = 0;\
         _02_26_ENCODE_FLS                  (buf_out, cls + 1                        );      /* uint32  | size   6 */ \
         _02_27_ENCODE_LLS                  (buf_out, cls + 5                        );      /* uint32  | size   6 */ \
         _06_01_ENCODE_TL_AMOUNT            (buf_out, tlamt                          );      /* amount  | size  48 */ \
-        _06_08_ENCODE_DROPS_FEE            (buf_out, drops_fee                      );      /* amount  | size   9 */ \
+        uint8_t* fee_ptr = buf_out;\
+        _06_08_ENCODE_DROPS_FEE            (buf_out, 0                              );      /* amount  | size   9 */ \
         _07_03_ENCODE_SIGNING_PUBKEY_NULL  (buf_out                                 );      /* pk      | size  35 */ \
         _08_01_ENCODE_ACCOUNT_SRC          (buf_out, acc                            );      /* account | size  22 */ \
         _08_03_ENCODE_ACCOUNT_DST          (buf_out, to_address                     );      /* account | size  22 */ \
-        etxn_details((uint32_t)buf_out, 138);                                               /* emitdet | size 138 */ \
+        etxn_details((uint32_t)buf_out, PREPARE_PAYMENT_SIMPLE_TRUSTLINE_SIZE);             /* emitdet | size 1?? */  \
+        int64_t fee = etxn_fee_base(buf_out_master, PREPARE_PAYMENT_SIMPLE_TRUSTLINE_SIZE);                          \ 
+        _06_08_ENCODE_DROPS_FEE            (fee_ptr, fee                            );                               \
     }
 
 
