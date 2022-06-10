@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 import fs from 'fs';
-import { mkdirSync, writeFileSync, existsSync, openSync, closeSync, readFileSync, rmSync, unlinkSync, fstat } from "fs";
+import { mkdirSync, writeFileSync, existsSync, openSync, closeSync, readFileSync, readdirSync, rmSync, unlinkSync, fstat } from "fs";
 import { deflateSync } from "zlib";
 import { execSync } from "child_process";
 import { z } from 'zod';
@@ -352,14 +352,15 @@ server.get('/language-server/c', { websocket: true }, (connection /* SocketStrea
 })
 
 server.get('/api/header-files', async (req, reply) => {
-  const hookapi = fs.readFileSync('./clang/includes/hookapi.h');
-  const hookmacro = fs.readFileSync('./clang/includes/hookmacro.h');
-  const sfcodes = fs.readFileSync('./clang/includes/sfcodes.h');
-  const files = {
-    hookapi: hookapi.toString(),
-    hookmacro: hookmacro.toString(),
-    sfcodes: sfcodes.toString()
-  }
+  const dirPath = './clang/includes';
+  var files = new Map<string, string>();
+  readdirSync(dirPath).forEach(fname => {
+    const nameExt = fname.split('.');
+    if ((nameExt.length === 2) && nameExt[0] && (nameExt[1].toLowerCase() === 'c')) {
+      const content = readFileSync(dirPath + '/' + fname);
+      files.set(nameExt[0], content.toString());
+    }
+  });
   reply.code(200).send(files)
 })
 
