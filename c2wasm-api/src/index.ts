@@ -392,12 +392,13 @@ server.get('/api/header-files', async (req, reply) => {
   var files = new Map<string, string>();
   readdirSync(dirPath).forEach(fname => {
     const nameExt = fname.split('.');
-    if ((nameExt.length === 2) && nameExt[0] && (nameExt[1].toLowerCase() === 'c')) {
+    if ((nameExt.length === 2) && nameExt[0] && (nameExt[1].toLowerCase() === 'h')) {
       const content = readFileSync(dirPath + '/' + fname);
       files.set(nameExt[0], content.toString());
     }
   });
-  reply.code(200).send(files)
+  const rsp = Object.fromEntries(files);
+  reply.code(200).send(rsp);
 })
 
 server.listen(process.env.PORT || 9000, process.env.HOST || '::', (err, address) => {
