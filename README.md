@@ -23,10 +23,6 @@ $ make checkout
 # make build
 ```
 
-Note that unless you have a credential manager set up for your github
-account, running the `checkout` target will ask for your credentials,
-once for every private submodule.
-
 The final container is called `xrpl-hooks-compiler` and can be run by
 the `run` target of Makefile in the docker directory.
 
