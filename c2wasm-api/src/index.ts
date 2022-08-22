@@ -22,6 +22,7 @@ server.register(fastifyWebSocket);
 const llvmDir = process.cwd() + "/clang/wasi-sdk";
 const tempDir = "/tmp";
 const sysroot = llvmDir + "/share/wasi-sysroot";
+const ascDir = process.cwd() + "/node_modules/.bin";
 
 export interface ResponseData {
   success: boolean;
@@ -184,6 +185,20 @@ function link_c_files(source_files: string[], compile_options: string, link_opti
   return true;
 }
 
+function build_assembly_script(source_files: string[], cwd: string, output: string, result_obj: Task) {
+  const files = source_files.join(' ');
+  const asc = ascDir + '/asc';
+  const cmd = asc + ' --runtime minimal -O3 ' + files + ' --textFile -o ' + output;
+  const out = shell_exec(cmd, cwd);
+  result_obj.console = sanitize_shell_output(out);
+  if (!existsSync(output)) {
+    result_obj.success = false;
+    return false;
+  }
+  result_obj.success = true;
+  return true;
+}
+
 function optimize_wasm(cwd: string, inplace: string, opt_options: string, result_obj: Task) {
   const unopt = cwd + '/unopt.wasm';
   const cmd = 'wasm-opt ' + opt_options + ' -o ' + inplace + ' ' + unopt;
@@ -268,18 +283,30 @@ function build_project(project: RequestBody, base: string) {
 
   const sources = [];
   let options;
+  let srctp;
   for (let file of files) {
     const name = file.name;
     if (!validate_filename(name)) {
       return complete(false, 'Invalid filename ' + name);
     }
-    const fileName = dir + '/' + name;
+    var fileName = dir + '/' + name;
+
+    // asc adds .ts extension, then complains it cannot find the file...
+    if ((file.type === 'as') && !fileName.endsWith('.ts')) {
+	fileName += '.ts';
+    }
+
     sources.push(fileName);
     if (!options) {
       options = file.options;
+      srctp = file.type;
     } else {
-      if (file.options && (file.options != options)) {
+      if (file.options && (file.options !== options)) {
         return complete(false, 'Per-file compilation options not supported');
+      }
+
+      if (file.type && (file.type !== srctp)) {
+        return complete(false, 'Multi-language compilation not supported');
       }
     }
 
@@ -295,7 +322,17 @@ function build_project(project: RequestBody, base: string) {
     name: 'building wasm'
   };
   build_result.tasks.push(link_result_obj);
-  if (!link_c_files(sources, options || '', link_options || '', dir, result, link_result_obj)) {
+
+  var bldres;
+  if (srctp === 'c') {
+    bldres = link_c_files(sources, options || '', link_options || '', dir, result, link_result_obj);
+  } else if (srctp === 'as') {
+    bldres = build_assembly_script(sources, dir, result, link_result_obj);
+  } else {
+    return complete(false, 'Unknown source file type ' + srctp);
+  }
+
+  if (!bldres) {
     return complete(false, 'Build error');
   }
 

@@ -16,6 +16,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "assemblyscript": "^0.20.19",
     "fastify": "^3.22.1",
     "fastify-cors": "^6.0.2",
     "fastify-websocket": "^4.0.0",
