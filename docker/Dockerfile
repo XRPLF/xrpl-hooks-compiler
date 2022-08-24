@@ -9,6 +9,7 @@ COPY c2wasm-api/package.json .
 COPY c2wasm-api/yarn.lock .
 COPY c2wasm-api/tsconfig.json .
 COPY c2wasm-api/src ./src
+COPY c2wasm-api/assemblyscript ./assemblyscript
 COPY wasi-sdk ./clang/wasi-sdk
 COPY hook-cleaner /usr/bin
 COPY wasm-opt /usr/bin
