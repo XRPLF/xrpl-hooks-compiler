@@ -189,7 +189,7 @@ function link_c_files(source_files: string[], compile_options: string, link_opti
 function build_assembly_script(source_files: string[], cwd: string, output: string, result_obj: Task) {
   const files = source_files.join(' ');
   const asc = ascDir + '/asc';
-  const api = asLibDir + '/xrpl-hooks-api.ts';
+  const api = asLibDir + '/hookapi.ts';
   const cmd = asc + ' --runtime stub -O3 --disable bulk-memory ' + files + ' --lib ' + api + ' --textFile -o ' + output;
   const out = shell_exec(cmd, cwd);
   result_obj.console = sanitize_shell_output(out);

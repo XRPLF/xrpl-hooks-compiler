@@ -21,6 +21,7 @@ build: bin
 	$(MAKE) -C clang-build
 	$(MAKE) -C clangd-build
 	$(MAKE) -C cleaner-build
+	$(MAKE) -C c2wasm-api
 	$(MAKE) -C docker
 
 doc-build: doc
@@ -36,5 +37,6 @@ clean:
 	$(MAKE) -C clang-build clean
 	$(MAKE) -C clangd-build clean
 	$(MAKE) -C cleaner-build clean
+	$(MAKE) -C c2wasm-api clean
 	$(MAKE) -C docker clean
 	-rm -rf bin doc
