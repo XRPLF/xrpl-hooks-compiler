@@ -1,16 +1,10 @@
-name: c2wasm-api to Heroku CD
+name: c2wasm-api to Docker Hub
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
-#set environment variables
-env:
-  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  APP_NAME: ${{ 'xrpl-c2wasm-api' }}
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -41,23 +35,16 @@ jobs:
         run: |
           unzip -o bin.zip
 
-      - name: Local build
-        run: |
-          cd docker
-          make dependencies
-          docker build . --tag web
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Build Docker image
-      - name: Docker build
-        if: success() && contains('refs/heads/master', github.ref)
-        run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-
-      # Push the Docker image to Heroku Container Registry
-      - name: Publish
-        if: success() && contains('refs/heads/master', github.ref)
-        run: |
-          cd docker
-          make dependencies
-          heroku container:push web -a $APP_NAME
-          make clean
-          heroku container:release web -a $APP_NAME
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+        file: ./Dockerfile
+        push: true
