@@ -8,6 +8,7 @@ checkout:
 	git submodule update --init --recursive llvm-project
 	git submodule update --init --recursive wasi-sdk
 	git submodule update --init --recursive hook-cleaner-c
+	git submodule update --init --recursive c2wasm-api/clang/includes
 
 bin:
 	mkdir $@
