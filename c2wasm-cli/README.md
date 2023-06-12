@@ -1,0 +1,3 @@
+# Build Executable Package
+
+`pkg .`
