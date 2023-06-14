@@ -16,7 +16,7 @@ export async function buildDir(dirPath: string, outDir: string): Promise<void> {
   }
 
   // Building wasm for each file object
-  Promise.all(
+  await Promise.all(
     fileObjects.map(async (fileObject) => {
       try {
         await buildWasm(fileObject, outDir);
@@ -40,7 +40,7 @@ export function readFiles(dirPath: string): any[] {
     const fileStat = fs.statSync(filePath);
     if (fileStat.isDirectory()) {
       files.push(...readFiles(filePath));
-    } else {
+    } else if (path.extname(fileName) === ".c") {
       const fileContent = fs.readFileSync(filePath, "utf-8");
       files.push({
         type: "c",
