@@ -5,7 +5,7 @@ import path from "path";
 import { decodeBinary } from "./decodeBinary";
 import "dotenv/config";
 
-export function buildDir(dirPath: string, outDir: string): void {
+export async function buildDir(dirPath: string, outDir: string): Promise<void> {
   // Reading all files in the directory tree
   let fileObjects: any[];
   try {

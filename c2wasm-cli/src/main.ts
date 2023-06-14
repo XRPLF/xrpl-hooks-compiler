@@ -4,7 +4,7 @@
 import { Command } from "commander";
 import { buildDir } from "./build";
 
-export function main() {
+export async function main() {
   // Creating a new command
   const program = new Command();
 
@@ -35,5 +35,5 @@ export function main() {
     process.exit(1);
   }
 
-  buildDir(dirPath, outDir);
+  await buildDir(dirPath, outDir);
 }

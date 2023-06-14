@@ -2,4 +2,8 @@
 
 const { main } = require("../dist/npm");
 
-main();
+async function run() {
+  await main();
+}
+
+run();
