@@ -5,6 +5,32 @@ import path from "path";
 import { decodeBinary } from "./decodeBinary";
 import "dotenv/config";
 
+export function buildDir(dirPath: string, outDir: string): void {
+  // Reading all files in the directory tree
+  let fileObjects: any[];
+  try {
+    fileObjects = readFiles(dirPath);
+  } catch (error: any) {
+    console.error(`Error reading files: ${error}`);
+    process.exit(1);
+  }
+
+  // Building wasm for each file object
+  Promise.all(
+    fileObjects.map(async (fileObject) => {
+      try {
+        await buildWasm(fileObject, outDir);
+      } catch (error) {
+        console.error(`Error building wasm: ${error}`);
+        process.exit(1);
+      }
+    })
+  ).catch((error) => {
+    console.error(`Error building wasm: ${error}`);
+    process.exit(1);
+  });
+}
+
 // Function to read all files in a directory tree
 export function readFiles(dirPath: string): any[] {
   const files: any[] = [];
@@ -38,7 +64,7 @@ export async function buildWasm(fileObject: any, outDir: string) {
   });
   try {
     const response = await axios.post(
-      `${process.env.CLI_HOST}/api/build`,
+      `${process.env.API_HOST}/api/build`,
       body,
       {
         headers: {
@@ -84,7 +110,7 @@ export async function buildWasm(fileObject: any, outDir: string) {
         );
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(`Error sending API call: ${error}`);
   }
 }

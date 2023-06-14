@@ -2,7 +2,7 @@
 
 // Importing required modules
 import { Command } from "commander";
-import { buildWasm, readFiles } from "./build";
+import { buildDir } from "./build";
 
 export function main() {
   // Creating a new command
@@ -35,27 +35,5 @@ export function main() {
     process.exit(1);
   }
 
-  // Reading all files in the directory tree
-  let fileObjects: any[];
-  try {
-    fileObjects = readFiles(dirPath);
-  } catch (error) {
-    console.error(`Error reading files: ${error}`);
-    process.exit(1);
-  }
-
-  // Building wasm for each file object
-  Promise.all(
-    fileObjects.map(async (fileObject) => {
-      try {
-        await buildWasm(fileObject, outDir);
-      } catch (error) {
-        console.error(`Error building wasm: ${error}`);
-        process.exit(1);
-      }
-    })
-  ).catch((error) => {
-    console.error(`Error building wasm: ${error}`);
-    process.exit(1);
-  });
+  buildDir(dirPath, outDir);
 }
