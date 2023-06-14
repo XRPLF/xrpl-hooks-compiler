@@ -4,6 +4,12 @@
 
 `npm install c2wasm-cli`
 
+## Add .env variables
+
+Copy the `.env.sample` to `.env`.
+
+Update the `API_HOST` variable
+
 ## Usage
 
 `c2wasm-cli contracts build`
