@@ -5,3 +5,4 @@ docker/c2wasm-api
 docker/wasi-sdk
 docker/clangd
 docker/cleaner
+wasi-sdk.ts
