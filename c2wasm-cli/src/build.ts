@@ -5,6 +5,19 @@ import path from "path";
 import { decodeBinary } from "./decodeBinary";
 import "dotenv/config";
 
+interface Task {
+  name: string;
+  console: string;
+  success: boolean;
+}
+
+interface BuildResult {
+  success: boolean;
+  message: string;
+  output: string;
+  tasks: Task[];
+}
+
 export async function buildDir(dirPath: string, outDir: string): Promise<void> {
   // Reading all files in the directory tree
   let fileObjects: any[];
@@ -31,6 +44,29 @@ export async function buildDir(dirPath: string, outDir: string): Promise<void> {
   });
 }
 
+export async function buildFile(
+  dirPath: string,
+  outDir: string
+): Promise<void> {
+  const fileContent = fs.readFileSync(dirPath, "utf-8");
+  if (!dirPath.includes(".c")) {
+    throw Error("Invalid file type. must be .c file");
+  }
+  const filename = dirPath.split("/").pop();
+  const fileObject = {
+    type: "c",
+    name: filename,
+    options: "-O3",
+    src: fileContent,
+  };
+  try {
+    await buildWasm(fileObject, outDir);
+  } catch (error) {
+    console.error(`Error building wasm: ${error}`);
+    process.exit(1);
+  }
+}
+
 // Function to read all files in a directory tree
 export function readFiles(dirPath: string): any[] {
   const files: any[] = [];
@@ -51,6 +87,41 @@ export function readFiles(dirPath: string): any[] {
     }
   }
   return files;
+}
+
+function parseBuildResult(result: BuildResult): string {
+  const errorConsole: string[] = [];
+
+  result.tasks.forEach((task) => {
+    if (!task.success) {
+      errorConsole.push(task.console);
+    }
+  });
+
+  if (errorConsole.length > 0) {
+    return errorConsole.join("\n");
+  }
+
+  return "";
+}
+
+async function saveFileOrError(
+  outDir: string,
+  filename: string,
+  result: BuildResult
+): Promise<void> {
+  if (!result.success) {
+    fs.writeFileSync(
+      path.join(outDir + "/" + filename + ".log"),
+      parseBuildResult(result)
+    );
+  } else {
+    const binary = await decodeBinary(result.output);
+    fs.writeFileSync(
+      path.join(outDir + "/" + filename + ".wasm"),
+      Buffer.from(binary)
+    );
+  }
 }
 
 export async function buildWasm(fileObject: any, outDir: string) {
@@ -77,12 +148,12 @@ export async function buildWasm(fileObject: any, outDir: string) {
     const success = responseData.success === true;
     const message = responseData.message;
     const output = success ? responseData.output : "";
-    const tasks = responseData.tasks.map((task: any) => {
+    const tasks = responseData.tasks.map((task: Task) => {
       return {
         name: task.name,
         console: task.console,
         success: task.success === true,
-      };
+      } as Task;
     });
 
     // Creating result object
@@ -91,24 +162,9 @@ export async function buildWasm(fileObject: any, outDir: string) {
       message,
       output,
       tasks,
-    };
-    // console.log(result);
-    const binary = await decodeBinary(result.output);
-    const outDirPath = process.cwd() + "/" + outDir;
-    fs.mkdir(outDirPath, (err) => {
-      if (err) {
-        // console.error(err);
-        fs.writeFileSync(
-          path.join(outDirPath + "/" + filename + ".wasm"),
-          Buffer.from(binary)
-        );
-      } else {
-        // console.log(`Directory ${outDirPath} created successfully`);
-        fs.writeFileSync(
-          path.join(outDirPath + "/" + filename + ".wasm"),
-          Buffer.from(binary)
-        );
-      }
+    } as BuildResult;
+    fs.mkdir(outDir, async () => {
+      await saveFileOrError(outDir, filename, result);
     });
   } catch (error: any) {
     console.log(`Error sending API call: ${error}`);
