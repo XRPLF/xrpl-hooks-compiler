@@ -1,6 +1,6 @@
 {
   "name": "c2wasm-cli",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/npm/index.js",
   "files": [
