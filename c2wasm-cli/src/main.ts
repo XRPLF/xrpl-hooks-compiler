@@ -31,7 +31,7 @@ export async function main() {
     console.error("Output directory path is required.");
     process.exit(1);
   }
-  const outStat = fs.statSync(inPath);
+  const outStat = fs.statSync(outDir);
   if (!outStat.isDirectory()) {
     console.error("Output path must be a directory.");
     process.exit(1);
