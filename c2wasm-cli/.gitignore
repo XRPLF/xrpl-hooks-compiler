@@ -5,7 +5,7 @@
 /dist
 /build
 
-.env
+# .env
 
 c2wasm-cli-linux
 c2wasm-cli-macos
