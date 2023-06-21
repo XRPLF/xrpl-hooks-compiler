@@ -115,6 +115,8 @@ async function saveFileOrError(
       path.join(outDir + "/" + filename + ".log"),
       parseBuildResult(result)
     );
+    console.error(parseBuildResult(result));
+    throw Error(result.message);
   } else {
     const binary = await decodeBinary(result.output);
     fs.writeFileSync(
