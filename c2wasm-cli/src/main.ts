@@ -31,10 +31,15 @@ export async function main() {
     console.error("Output directory path is required.");
     process.exit(1);
   }
-  const outStat = fs.statSync(outDir);
-  if (!outStat.isDirectory()) {
-    console.error("Output path must be a directory.");
-    process.exit(1);
+
+  try {
+    const outStat = fs.statSync(outDir);
+    if (!outStat.isDirectory()) {
+      console.error("Output path must be a directory.");
+      process.exit(1);
+    }
+  } catch (error: any) {
+    fs.mkdir(outDir, async () => console.log(`Created directory: ${outDir}`));
   }
 
   const dirStat = fs.statSync(inPath);
