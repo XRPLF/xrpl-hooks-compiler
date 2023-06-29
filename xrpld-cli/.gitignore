@@ -1,0 +1,17 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/dist
+/build
+
+# .env
+
+c2wasm-cli-linux
+c2wasm-cli-macos
+c2wasm-cli-win.exe
+
+xrpld-cluster/xrpld_vmaster/db
+xrpld-cluster/xrpld_vmaster/debug.log
+xrpld-cluster/xrpld_vnode1/db
+xrpld-cluster/xrpld_vnode1/debug.log

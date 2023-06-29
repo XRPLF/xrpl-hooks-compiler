@@ -1,0 +1,53 @@
+# docker compose -f docker-compose.yml up --build --force-recreate -d
+version: '3.4'
+services:
+  xrpld_vmaster:
+    build:
+      context: xrpld-cluster/xrpld_vmaster
+      dockerfile: Dockerfile
+    container_name: xrpld-vmaster
+    ports:
+      - "5005:5005"
+      - "6006:6006"
+      - "51235:51235"
+    volumes:
+      - ${PWD}/xrpld/xrpld_vmaster/config:/config
+      - ${PWD}/xrpld/xrpld_vmaster/db:/db
+    networks:
+      - xrpld-network
+  xrpld_vnode1:
+    build:
+      context: xrpld-cluster/xrpld_vnode1
+      dockerfile: Dockerfile
+    container_name: xrpld-vnode1
+    ports:
+      - "5006:5006"
+      - "6007:6007"
+      - "51236:51236"
+    volumes:
+      - ${PWD}/xrpld/xrpld_vnode1/config:/config
+      - ${PWD}/xrpld/xrpld_vnode1/db:/db
+    networks:
+      - xrpld-network
+  xrpld_vl:
+    build:
+      context: xrpld-cluster/xrpld_vl
+      dockerfile: Dockerfile
+    container_name: xrpld-vl
+    ports:
+      - "80:80"
+    networks:
+      - xrpld-network
+  xrpld_explorer:
+    image: transia/explorer:latest
+    container_name: xrpld-explorer
+    environment:
+      - PORT=4000
+      - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:6007
+    ports:
+      - "4000:4000"
+    networks:
+      - xrpld-network
+networks:
+  xrpld-network:
+    driver: bridge

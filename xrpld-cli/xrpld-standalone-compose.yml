@@ -1,0 +1,25 @@
+# docker compose -f docker-compose.yml up --build --force-recreate -d
+version: '3.4'
+services:
+  node1-rippled:
+    image: gcr.io/thelab-924f3/dangell7-hooksv3d-standalone:latest
+    container_name: node1-rippled
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5005:5005"
+      - "6006:6006"
+      - "51235:51235"
+    volumes:
+      - ${PWD}/xrpld:/app/config
+  node1-explorer:
+    image: transia/explorer:latest
+    container_name: node1-explorer
+    environment:
+      - PORT=4000
+      - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:80
+    ports:
+      - "4000:4000"
+networks:
+  witnessd:
+    driver: bridge
