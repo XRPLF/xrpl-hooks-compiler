@@ -63,6 +63,7 @@ export async function main() {
   if (command === "up") {
     console.log("Executing 'up' command...");
     copyFilesToRoot('xrpld-cluster')
+    console.log("Downloading Image...");
     exec(
       `docker compose -f ${distPath}/xrpld-cluster-compose.yml up --build --force-recreate -d`,
       (error, stdout, stderr) => {
@@ -104,20 +105,10 @@ export async function main() {
         console.log('`down:clean` executed successfully.');
       }
     );
-  } else if (command === "trace") {
-    exec(
-      "tail -f xrpld/debug.log | grep HookTrace",
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Command execution failed with error: ${error}`);
-          return;
-        }
-        console.log(stdout);
-      }
-    );
   } else if (command === "up:standalone") {
     console.log("Executing 'up:standalone' command...");
     copyFilesToRoot('xrpld-standalone')
+    console.log("Downloading Image...");
     exec(
       `docker compose -f ${distPath}/xrpld-standalone-compose.yml up --build --force-recreate -d`,
       (error, stdout, stderr) => {
