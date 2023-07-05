@@ -1,0 +1,13 @@
+{
+    "[python]": {
+        "formatting.provider": "black",
+        "linting.pylintEnabled": false,
+        "linting.flake8Enabled": true,
+        "linting.enabled": true,
+        "linting.mypyEnabled": true,
+        // "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 79,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
+      },
+}
