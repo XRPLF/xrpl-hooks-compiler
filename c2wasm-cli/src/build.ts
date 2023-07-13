@@ -137,7 +137,7 @@ export async function buildWasm(fileObject: any, outDir: string) {
   });
   try {
     const response = await axios.post(
-      `${process.env.API_HOST}/api/build`,
+      `${process.env.C2WASM_CLI_HOST}/api/build`,
       body,
       {
         headers: {
