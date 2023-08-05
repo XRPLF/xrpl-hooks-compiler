@@ -2,7 +2,7 @@
 version: '3.4'
 services:
   node1-rippled:
-    image: gcr.io/thelab-924f3/dangell7-hooksv3d-standalone:latest
+    image: transia/hooksv3d-standalone:latest
     container_name: node1-rippled
     ports:
       - "80:80"
