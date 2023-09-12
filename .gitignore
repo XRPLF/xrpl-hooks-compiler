@@ -7,3 +7,4 @@ docker/clangd
 docker/cleaner
 wasi-sdk.ts
 hook-cleaner
+guard_checker
