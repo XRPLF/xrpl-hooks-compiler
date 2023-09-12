@@ -1,21 +1,33 @@
-import fastify from 'fastify';
-import fs from 'fs';
-import { mkdirSync, writeFileSync, existsSync, openSync, closeSync, readFileSync, renameSync, readdirSync, rmSync, unlinkSync, fstat } from "fs";
+import fastify from "fastify";
+import fs from "fs";
+import {
+  mkdirSync,
+  writeFileSync,
+  existsSync,
+  openSync,
+  closeSync,
+  readFileSync,
+  renameSync,
+  readdirSync,
+  rmSync,
+  unlinkSync,
+  fstat,
+} from "fs";
 import { deflateSync } from "zlib";
 import { execSync } from "child_process";
-import { z } from 'zod';
-import fastifyCors from 'fastify-cors';
-import fastifyWebSocket from 'fastify-websocket';
-import * as ws from 'ws';
-import * as rpc from 'vscode-ws-jsonrpc';
-import * as rpcServer from 'vscode-ws-jsonrpc/lib/server';
+import { z } from "zod";
+import fastifyCors from "fastify-cors";
+import fastifyWebSocket from "fastify-websocket";
+import * as ws from "ws";
+import * as rpc from "vscode-ws-jsonrpc";
+import * as rpcServer from "vscode-ws-jsonrpc/lib/server";
 
 const server = fastify();
 
 server.register(fastifyCors, {
   // put your options here
-  origin: '*'
-})
+  origin: "*",
+});
 server.register(fastifyWebSocket);
 
 // Compilation code
@@ -39,16 +51,19 @@ export interface Task {
 }
 
 const requestBodySchema = z.object({
-  output: z.enum(['wasm']),
-  files: z.array(z.object({
-    type: z.string(),
-    name: z.string(),
-    options: z.string().optional(),
-    src: z.string()
-  })),
+  output: z.enum(["wasm"]),
+  files: z.array(
+    z.object({
+      type: z.string(),
+      name: z.string(),
+      options: z.string().optional(),
+      src: z.string(),
+    })
+  ),
   link_options: z.string().optional(),
   compress: z.boolean().optional(),
-  strip: z.boolean().optional()
+  strip: z.boolean().optional(),
+  guard: z.boolean().optional(),
 });
 
 type RequestBody = z.infer<typeof requestBodySchema>;
@@ -85,10 +100,10 @@ function sanitize_shell_output<T>(out: T): T {
 }
 
 function shell_exec(cmd: string, cwd: string) {
-  const out = openSync(cwd + '/out.log', 'w');
-  let error = '';
+  const out = openSync(cwd + "/out.log", "w");
+  let error = "";
   try {
-    execSync(cmd, { cwd, stdio: [null, out, out], });
+    execSync(cmd, { cwd, stdio: [null, out, out] });
   } catch (ex: unknown) {
     if (ex instanceof Error) {
       error = ex?.message;
@@ -96,19 +111,23 @@ function shell_exec(cmd: string, cwd: string) {
   } finally {
     closeSync(out);
   }
-  const result = readFileSync(cwd + '/out.log').toString() || error;
+  const result = readFileSync(cwd + "/out.log").toString() || error;
   return result;
 }
 
 function get_optimization_options(options: string) {
   const optimization_options = [
-    /* default '-O0' not included */ '-O1', '-O2', '-O3', '-O4', '-Os'
+    /* default '-O0' not included */ "-O1",
+    "-O2",
+    "-O3",
+    "-O4",
+    "-Os",
   ];
 
-  let safe_options = '';
+  let safe_options = "";
   for (let o of optimization_options) {
     if (options.includes(o)) {
-      safe_options += ' ' + o;
+      safe_options += " " + o;
     }
   }
 
@@ -118,15 +137,18 @@ function get_optimization_options(options: string) {
 function get_clang_options(options: string) {
   const clang_flags = `--sysroot=${sysroot} -xc -I/app/clang/includes -fdiagnostics-print-source-range-info -Werror=implicit-function-declaration`;
   const miscellaneous_options = [
-    '-ffast-math', '-fno-inline', '-std=c99', '-std=c89'
+    "-ffast-math",
+    "-fno-inline",
+    "-std=c99",
+    "-std=c89",
   ];
 
-  let safe_options = '';
+  let safe_options = "";
   for (let o of miscellaneous_options) {
     if (options.includes(o)) {
-      safe_options += ' ' + o;
-    } else if (o.includes('-std=') && options.toLowerCase().includes(o)) {
-      safe_options += ' ' + o;
+      safe_options += " " + o;
+    } else if (o.includes("-std=") && options.toLowerCase().includes(o)) {
+      safe_options += " " + o;
     }
   }
 
@@ -139,11 +161,11 @@ function get_lld_options(options: string) {
   if (!options) {
     return clang_flags;
   }
-  const available_options = ['--import-memory', '-g'];
-  let safe_options = '';
+  const available_options = ["--import-memory", "-g"];
+  let safe_options = "";
   for (let o of available_options) {
     if (options.includes(o)) {
-      safe_options += ' -Wl,' + o;
+      safe_options += " -Wl," + o;
     }
   }
   return clang_flags + safe_options;
@@ -163,17 +185,33 @@ function validate_filename(name: string) {
   }
   const parts = name.split(/\//g);
   for (let p of parts) {
-    if (p == '.' || p == '..') {
+    if (p == "." || p == "..") {
       return false;
     }
   }
   return parts;
 }
 
-function link_c_files(source_files: string[], compile_options: string, link_options: string, cwd: string, output: string, result_obj: Task) {
-  const files = source_files.join(' ');
-  const clang = llvmDir + '/bin/clang';
-  const cmd = clang + ' ' + get_clang_options(compile_options) + ' ' + get_lld_options(link_options) + ' ' + files + ' -o ' + output;
+function link_c_files(
+  source_files: string[],
+  compile_options: string,
+  link_options: string,
+  cwd: string,
+  output: string,
+  result_obj: Task
+) {
+  const files = source_files.join(" ");
+  const clang = llvmDir + "/bin/clang";
+  const cmd =
+    clang +
+    " " +
+    get_clang_options(compile_options) +
+    " " +
+    get_lld_options(link_options) +
+    " " +
+    files +
+    " -o " +
+    output;
   const out = shell_exec(cmd, cwd);
   result_obj.console = sanitize_shell_output(out);
   if (!existsSync(output)) {
@@ -184,15 +222,20 @@ function link_c_files(source_files: string[], compile_options: string, link_opti
   return true;
 }
 
-function optimize_wasm(cwd: string, inplace: string, opt_options: string, result_obj: Task) {
-  const unopt = cwd + '/unopt.wasm';
-  const cmd = 'wasm-opt ' + opt_options + ' -o ' + inplace + ' ' + unopt;
-  const out = openSync(cwd + '/opt.log', 'w');
-  let error = '';
+function optimize_wasm(
+  cwd: string,
+  inplace: string,
+  opt_options: string,
+  result_obj: Task
+) {
+  const unopt = cwd + "/unopt.wasm";
+  const cmd = "wasm-opt " + opt_options + " -o " + inplace + " " + unopt;
+  const out = openSync(cwd + "/opt.log", "w");
+  let error = "";
   let success = true;
   try {
     renameSync(inplace, unopt);
-    execSync(cmd, { cwd, stdio: [null, out, out], });
+    execSync(cmd, { cwd, stdio: [null, out, out] });
   } catch (ex: unknown) {
     success = false;
     if (ex instanceof Error) {
@@ -201,19 +244,19 @@ function optimize_wasm(cwd: string, inplace: string, opt_options: string, result
   } finally {
     closeSync(out);
   }
-  const out_msg = readFileSync(cwd + '/opt.log').toString() || error;
+  const out_msg = readFileSync(cwd + "/opt.log").toString() || error;
   result_obj.console = sanitize_shell_output(out_msg);
   result_obj.success = success;
   return success;
 }
 
 function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
-  const cmd = 'hook-cleaner ' + inplace;
-  const out = openSync(cwd + '/cleanout.log', 'w');
-  let error = '';
+  const cmd = "hook-cleaner " + inplace;
+  const out = openSync(cwd + "/cleanout.log", "w");
+  let error = "";
   let success = true;
   try {
-    execSync(cmd, { cwd, stdio: [null, out, out], });
+    execSync(cmd, { cwd, stdio: [null, out, out] });
   } catch (ex: unknown) {
     success = false;
     if (ex instanceof Error) {
@@ -222,7 +265,28 @@ function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
   } finally {
     closeSync(out);
   }
-  const out_msg = readFileSync(cwd + '/cleanout.log').toString() || error;
+  const out_msg = readFileSync(cwd + "/cleanout.log").toString() || error;
+  result_obj.console = sanitize_shell_output(out_msg);
+  result_obj.success = success;
+  return success;
+}
+
+function guard_wasm(cwd: string, inplace: string, result_obj: Task) {
+  const cmd = "guard-checker " + inplace;
+  const out = openSync(cwd + "/guardout.log", "w");
+  let error = "";
+  let success = true;
+  try {
+    execSync(cmd, { cwd, stdio: [null, out, out] });
+  } catch (ex: unknown) {
+    success = false;
+    if (ex instanceof Error) {
+      error = ex?.message;
+    }
+  } finally {
+    closeSync(out);
+  }
+  const out_msg = readFileSync(cwd + "/guardout.log").toString() || error;
   result_obj.console = sanitize_shell_output(out_msg);
   result_obj.success = success;
   return success;
@@ -232,14 +296,15 @@ function build_project(project: RequestBody, base: string) {
   const output = project.output;
   const compress = project.compress;
   const strip = project.strip;
+  const guard = project.guard;
   let build_result: ResponseData = {
     success: false,
-    message: '',
-    output: '',
+    message: "",
+    output: "",
     tasks: [],
   };
-  const dir = base + '.$';
-  const result = base + '.wasm';
+  const dir = base + ".$";
+  const result = base + ".wasm";
 
   const complete = (success: boolean, message: string) => {
     rmSync(dir, { recursive: true });
@@ -252,14 +317,14 @@ function build_project(project: RequestBody, base: string) {
     return build_result;
   };
 
-  if (output != 'wasm') {
-    return complete(false, 'Invalid output type ' + output);
+  if (output != "wasm") {
+    return complete(false, "Invalid output type " + output);
   }
 
   build_result.tasks = [];
   const files = project.files;
   if (!files.length) {
-    return complete(false, 'No source files');
+    return complete(false, "No source files");
   }
 
   if (!existsSync(dir)) {
@@ -271,140 +336,177 @@ function build_project(project: RequestBody, base: string) {
   for (let file of files) {
     const name = file.name;
     if (!validate_filename(name)) {
-      return complete(false, 'Invalid filename ' + name);
+      return complete(false, "Invalid filename " + name);
     }
-    const fileName = dir + '/' + name;
+    const fileName = dir + "/" + name;
     sources.push(fileName);
     if (!options) {
       options = file.options;
     } else {
-      if (file.options && (file.options != options)) {
-        return complete(false, 'Per-file compilation options not supported');
+      if (file.options && file.options != options) {
+        return complete(false, "Per-file compilation options not supported");
       }
     }
 
     const src = file.src;
     if (!src) {
-      return complete(false, 'Source file ' + name + ' is empty');
+      return complete(false, "Source file " + name + " is empty");
     }
 
     writeFileSync(fileName, src);
   }
   const link_options = project.link_options;
   const link_result_obj = {
-    name: 'building wasm'
+    name: "building wasm",
   };
   build_result.tasks.push(link_result_obj);
-  if (!link_c_files(sources, options || '', link_options || '', dir, result, link_result_obj)) {
-    return complete(false, 'Build error');
+  if (
+    !link_c_files(
+      sources,
+      options || "",
+      link_options || "",
+      dir,
+      result,
+      link_result_obj
+    )
+  ) {
+    return complete(false, "Build error");
   }
 
-  const opt_options = get_optimization_options(options || '');
+  const opt_options = get_optimization_options(options || "");
   if (opt_options) {
     const opt_obj = {
-      name: 'optimizing wasm'
+      name: "optimizing wasm",
     };
     build_result.tasks.push(opt_obj);
     if (!optimize_wasm(dir, result, opt_options, opt_obj)) {
-      return complete(false, 'Optimization error');
+      return complete(false, "Optimization error");
     }
   }
 
   if (strip) {
     const clean_obj = {
-      name: 'cleaning wasm'
+      name: "cleaning wasm",
     };
     build_result.tasks.push(clean_obj);
     if (!clean_wasm(dir, result, clean_obj)) {
-      return complete(false, 'Post-build error');
+      return complete(false, "Post-build error");
+    }
+  }
+
+  if (guard) {
+    const clean_obj = {
+      name: "guarding wasm",
+    };
+    build_result.tasks.push(clean_obj);
+    if (!guard_wasm(dir, result, clean_obj)) {
+      return complete(false, "Post-build error");
     }
   }
 
   build_result.output = serialize_file_data(result, compress || false);
 
-  return complete(true, 'Success');
+  return complete(true, "Success");
 }
 // END Compile code
 
-server.post('/api/build', async (req, reply) => {
+server.post("/api/build", async (req, reply) => {
   // Bail out early if not HTTP POST
-  if (req.method !== 'POST') {
-    return reply.code(405).send('405 Method Not Allowed');
+  if (req.method !== "POST") {
+    return reply.code(405).send("405 Method Not Allowed");
   }
-  const baseName = tempDir + '/build_' + Math.random().toString(36).slice(2);
+  const baseName = tempDir + "/build_" + Math.random().toString(36).slice(2);
   let body: RequestBody | undefined;
   try {
     body = requestBodySchema.parse(req.body);
   } catch (err) {
-    console.log(err)
-    return reply.code(400).send('400 Bad Request')
+    console.log(err);
+    return reply.code(400).send("400 Bad Request");
   }
   try {
-    console.log('Building in ', baseName);
+    console.log("Building in ", baseName);
     const result = build_project(body, baseName);
     return reply.code(200).send(result);
   } catch (ex) {
-    return reply.code(500).send('500 Internal server error')
+    return reply.code(500).send("500 Internal server error");
   }
   // return reply.code(200).send({ hello: 'world' });
 });
 
-server.get('/', async (req, reply) => {
-  reply.code(200).send('ok')
-})
+server.get("/", async (req, reply) => {
+  reply.code(200).send("ok");
+});
 
 function toSocket(webSocket: ws): rpc.IWebSocket {
   return {
-    send: content => webSocket.send(content),
-    onMessage: cb => webSocket.onmessage = event => cb(event.data),
-    onError: cb => webSocket.onerror = event => {
-      if ('message' in event) {
-        cb((event as any).message)
-      }
-    },
-    onClose: cb => webSocket.onclose = event => cb(event.code, event.reason),
-    dispose: () => webSocket.close()
-  }
+    send: (content) => webSocket.send(content),
+    onMessage: (cb) => (webSocket.onmessage = (event) => cb(event.data)),
+    onError: (cb) =>
+      (webSocket.onerror = (event) => {
+        if ("message" in event) {
+          cb((event as any).message);
+        }
+      }),
+    onClose: (cb) =>
+      (webSocket.onclose = (event) => cb(event.code, event.reason)),
+    dispose: () => webSocket.close(),
+  };
 }
 
-server.get('/language-server/c', { websocket: true }, (connection /* SocketStream */, req /* FastifyRequest */) => {
-  let localConnection = rpcServer.createServerProcess('Clangd process', 'clangd', ['--compile-commands-dir=/etc/clangd', '--limit-results=200']);
-  let socket: rpc.IWebSocket = toSocket(connection.socket);
-  let newConnection = rpcServer.createWebSocketConnection(socket);
-  rpcServer.forward(newConnection, localConnection);
-  console.log(`Forwarding new client`);
-  socket.onClose((code, reason) => {
-    console.log('Client closed', reason);
-    try {
-      localConnection.dispose();
-    } catch (err) {
-      console.log(err)
-    }
-  });
-  // connection.socket.on('message', message => {
-  //   // message.toString() === 'hi from client'
-  //   connection.socket.send('hi from server')
-  // })
-})
+server.get(
+  "/language-server/c",
+  { websocket: true },
+  (connection /* SocketStream */, req /* FastifyRequest */) => {
+    let localConnection = rpcServer.createServerProcess(
+      "Clangd process",
+      "clangd",
+      ["--compile-commands-dir=/etc/clangd", "--limit-results=200"]
+    );
+    let socket: rpc.IWebSocket = toSocket(connection.socket);
+    let newConnection = rpcServer.createWebSocketConnection(socket);
+    rpcServer.forward(newConnection, localConnection);
+    console.log(`Forwarding new client`);
+    socket.onClose((code, reason) => {
+      console.log("Client closed", reason);
+      try {
+        localConnection.dispose();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    // connection.socket.on('message', message => {
+    //   // message.toString() === 'hi from client'
+    //   connection.socket.send('hi from server')
+    // })
+  }
+);
 
-server.get('/api/header-files', async (req, reply) => {
-  const dirPath = './clang/includes';
+server.get("/api/header-files", async (req, reply) => {
+  const dirPath = "./clang/includes";
   var files = new Map<string, string>();
-  readdirSync(dirPath).forEach(fname => {
-    const nameExt = fname.split('.');
-    if ((nameExt.length === 2) && nameExt[0] && (nameExt[1].toLowerCase() === 'h')) {
-      const content = readFileSync(dirPath + '/' + fname);
+  readdirSync(dirPath).forEach((fname) => {
+    const nameExt = fname.split(".");
+    if (
+      nameExt.length === 2 &&
+      nameExt[0] &&
+      nameExt[1].toLowerCase() === "h"
+    ) {
+      const content = readFileSync(dirPath + "/" + fname);
       files.set(nameExt[0], content.toString());
     }
   });
   const rsp = Object.fromEntries(files);
   reply.code(200).send(rsp);
-})
-
-server.listen(process.env.PORT || 9000, process.env.HOST || '::', (err, address) => {
-  if (err) {
-    console.error(err)
-    process.exit(1)
-  }
-  console.log(`Server listening at ${address}`)
 });
+
+server.listen(
+  process.env.PORT || 9000,
+  process.env.HOST || "::",
+  (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Server listening at ${address}`);
+  }
+);

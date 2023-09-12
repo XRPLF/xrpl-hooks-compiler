@@ -42,6 +42,11 @@
 #define COMPARE_LESS 2U
 #define COMPARE_GREATER 4U
 
+// Common Signing Field Sizes (Bytes)
+#define SFS_ACCOUNT 20
+#define SFS_AMOUNT_XRP 8
+#define SFS_AMOUNT_IOU 48
+
 #include "error.h"
 #include "extern.h"
 #include "sfcodes.h"

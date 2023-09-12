@@ -10,3 +10,6 @@
 [submodule "c2wasm-api/clang/includes"]
 	path = c2wasm-api/clang/includes
 	url = https://github.com/XRPLF/hook-macros
+[submodule "guard-checker"]
+	path = guard-checker
+	url = git@github.com:RichardAH/guard-checker.git

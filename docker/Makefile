@@ -5,7 +5,7 @@ MAIN_CONTAINER_TAG?=xrpl-hooks-compiler
 build: dependencies
 	docker build -t $(MAIN_CONTAINER_TAG) .
 
-dependencies: wasi-sdk c2wasm-api clangd hook-cleaner
+dependencies: wasi-sdk c2wasm-api clangd hook-cleaner guard-checker
 
 run:
 	docker run -p 127.0.0.1:9000:9000/tcp $(MAIN_CONTAINER_TAG):latest
@@ -29,5 +29,8 @@ hook-cleaner: ../bin/hook-cleaner
 c2wasm-api: ../c2wasm-api
 	cp -LR $< .
 
+guard-checker: ../bin/guard-checker
+	cp $< .
+
 clean:
-	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner
+	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner guard-checker
