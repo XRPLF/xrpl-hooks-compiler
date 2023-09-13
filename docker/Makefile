@@ -29,8 +29,9 @@ hook-cleaner: ../bin/hook-cleaner
 c2wasm-api: ../c2wasm-api
 	cp -LR $< .
 
-guard-checker: ../bin/guard-checker
+guard-checker: ../bin/guard_checker
 	cp $< .
 
 clean:
 	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner guard-checker
+	-rm -rf ../wasi-sdk.ts

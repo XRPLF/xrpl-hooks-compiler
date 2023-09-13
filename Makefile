@@ -23,7 +23,6 @@ build: bin
 	$(MAKE) -C clang-build
 	$(MAKE) -C clangd-build
 	$(MAKE) -C cleaner-build
-	$(MAKE) -C guard-checker
 	$(MAKE) -C docker
 
 doc-build: doc
@@ -39,6 +38,5 @@ clean:
 	$(MAKE) -C clang-build clean
 	$(MAKE) -C clangd-build clean
 	$(MAKE) -C cleaner-build clean
-	$(MAKE) -C guard-checker clean
 	$(MAKE) -C docker clean
 	-rm -rf bin doc
