@@ -33,5 +33,5 @@ guard-checker: ../bin/guard_checker
 	cp $< .
 
 clean:
-	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner guard-checker
+	-rm -rf c2wasm-api clangd wasi-sdk hook-cleaner guard_checker
 	-rm -rf ../wasi-sdk.ts
