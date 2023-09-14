@@ -272,7 +272,7 @@ function clean_wasm(cwd: string, inplace: string, result_obj: Task) {
 }
 
 function guard_wasm(cwd: string, inplace: string, result_obj: Task) {
-  const cmd = "guard-checker " + inplace;
+  const cmd = "guard_checker " + inplace;
   const out = openSync(cwd + "/guardout.log", "w");
   let error = "";
   let success = true;
