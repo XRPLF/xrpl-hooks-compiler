@@ -5,6 +5,20 @@ import base64
 import json
 from typing import Dict, Any  # noqa: F401
 import yaml
+import time
+from datetime import datetime
+
+rippled_ts: int = 946684800
+
+
+def from_date_to_effective(date_str: str):
+    effective_ts = datetime.strptime(date_str, "%d/%m/%Y").timestamp()
+    return effective_ts - rippled_ts
+
+
+def from_days_to_expiration(days: int):
+    current_time: int = int(time.time()) - rippled_ts
+    return current_time + (86400 * days)  # expires in x days
 
 
 def encode_blob(blob: Dict[str, Any]) -> bytes:

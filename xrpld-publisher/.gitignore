@@ -7,3 +7,5 @@ __pycache__/
 .venv
 
 keystore/
+vl.json
+playground.py

@@ -5,18 +5,26 @@ import base64
 import os
 from typing import Dict, Any, List  # noqa: F401
 import subprocess
+import time
+from datetime import datetime
+from basedir import basedir
 
 from xrpl.core.binarycodec.main import decode
-from xrpld_publisher.utils import read_json, read_txt
+from xrpld_publisher.utils import (
+    read_json,
+    read_txt,
+    from_date_to_effective,
+    from_days_to_expiration,
+)
 from xrpld_publisher.models import Validator, VL, Blob
 
 
 class PublisherClient(object):
     vl_path: str = ""
-    manifest: str = ""
     vl: VL = None
 
     def __init__(cls, manifest: str = None, vl_path: str = None) -> None:
+        cls.bin_path: str = os.path.join(basedir, "bin/validator-list")
         if vl_path:
             try:
                 cls.vl_path = vl_path
@@ -28,8 +36,9 @@ class PublisherClient(object):
                 raise e
 
         if manifest:
+            cls.vl_path: str = os.path.join(basedir, "vl.json")
             cls.vl = VL()
-            cls.vl.manifest = cls.manifest
+            cls.vl.manifest = manifest
             cls.vl.blob = Blob()
             cls.vl.blob.sequence = 1
             pass
@@ -67,7 +76,7 @@ class PublisherClient(object):
 
         cls.vl.blob.validators = validators
 
-    def sign_unl(cls, pk: int, effective: int, expiration: int):
+    def sign_unl(cls, pk: int, effective: str = None, expiration: int = None):
         if not cls.vl:
             raise ValueError("invalid vl")
 
@@ -75,15 +84,15 @@ class PublisherClient(object):
             raise ValueError("must have at least 1 validator")
 
         if not effective:
-            effective: int = 0  # 01/01/2000
+            effective: int = from_date_to_effective("01/01/2000")
 
         if not expiration:
-            expiration: int = 86400 * 30  # expires in 30 days
+            expiration: int = from_days_to_expiration(30)
 
         out = open(cls.vl_path, "w")
         vl_manifests: List[str] = [v.manifest for v in cls.vl.blob.validators]
         args = [
-            "../bin/validator-list",
+            cls.bin_path,
             "sign",
             "--private_key",
             pk,
@@ -97,4 +106,4 @@ class PublisherClient(object):
             ",".join(vl_manifests),
         ]
         subprocess.call(args, stdout=out)
-        return read_txt(vl_path)
+        return read_txt(cls.vl_path)

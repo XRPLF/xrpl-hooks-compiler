@@ -48,6 +48,9 @@ The `PublisherClient` class provides methods for managing and publishing VLs.
 from xrpld_publisher.publisher import PublisherClient
 
 # Create a new instance of the PublisherClient
+client = PublisherClient(manifest="manifest")
+
+# Create an existing instance of the PublisherClient
 client = PublisherClient(vl_path="my/dir/vl.json")
 
 # Add a validator to the VL
@@ -57,7 +60,9 @@ client.add_validator("manifest")
 client.remove_validator("public_key")
 
 # Sign the VL with a private key and generate a signed VL
-signed_vl = client.sign_unl("private_key")
+effective: int = from_date_to_effective("01/01/2022")
+expiration: int = from_days_to_expiration(30)
+signed_vl = client.sign_unl("private_key", effective=effective, expiration=expiration)
 ```
 
 The VL file is stored in the `vl_path` directory.
