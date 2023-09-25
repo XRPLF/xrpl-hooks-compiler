@@ -1,20 +1,22 @@
-# docker compose -f docker-compose.yml up --build --force-recreate -d
 version: '3.4'
 services:
-  node1-rippled:
-    image: transia/hooksv3d-standalone:latest
-    container_name: node1-rippled
+  xrpld-standalone:
+    build:
+      context: xrpld-standalone
+      dockerfile: Dockerfile
+    container_name: xrpld-standalone
     ports:
       - "80:80"
-      - "443:443"
       - "5005:5005"
       - "6006:6006"
       - "51235:51235"
     volumes:
-      - ${PWD}/xrpld:/app/config
-  node1-explorer:
+      - ${PWD}/xrpld/config:/etc/opt/ripple
+      - ${PWD}/xrpld/log:/var/log/rippled
+      - ${PWD}/xrpld/lib:/var/lib/rippled
+  xrpld-explorer:
     image: transia/explorer:latest
-    container_name: node1-explorer
+    container_name: xrpld-explorer
     environment:
       - PORT=4000
       - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:80

@@ -15,3 +15,5 @@ xrpld-cluster/xrpld_vmaster/db
 xrpld-cluster/xrpld_vmaster/debug.log
 xrpld-cluster/xrpld_vnode1/db
 xrpld-cluster/xrpld_vnode1/debug.log
+
+/xrpld
