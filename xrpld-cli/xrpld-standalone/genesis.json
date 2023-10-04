@@ -4,7 +4,7 @@
     "accountState": [
       {
         "Account": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-        "Balance": "100000000000000000",
+        "Balance": "100000000000000",
         "Flags": 0,
         "LedgerEntryType": "AccountRoot",
         "OwnerCount": 0,
@@ -328,8 +328,8 @@
     "parent_close_time": 0,
     "parent_hash": "56DA0940767AC2F17F0E384F04816002403D0756432B9D503DDA20128A2AAF11",
     "seqNum": "1",
-    "totalCoins": "100000000000000000",
-    "total_coins": "100000000000000000",
+    "totalCoins": "100000000000000",
+    "total_coins": "100000000000000",
     "transaction_hash": "9A77D1D1A4B36DA77B9C4DC63FDEB8F821741D157802F9C42A6ED86003D8B4A0",
     "transactions": []
   },
