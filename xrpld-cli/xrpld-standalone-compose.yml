@@ -14,6 +14,11 @@ services:
       - ${PWD}/xrpld/config:/etc/opt/ripple
       - ${PWD}/xrpld/log:/var/log/rippled
       - ${PWD}/xrpld/lib:/var/lib/rippled
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 16G
   xrpld-explorer:
     image: transia/explorer:latest
     container_name: xrpld-explorer

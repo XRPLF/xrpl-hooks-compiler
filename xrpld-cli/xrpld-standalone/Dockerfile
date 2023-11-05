@@ -1,4 +1,4 @@
-FROM transia/xahau-binary:10.9.2023 as rippled
+FROM transia/xahau-binary:2023.10.30-443 as rippled
 # FROM ubuntu:jammy as base
 
 WORKDIR /app
