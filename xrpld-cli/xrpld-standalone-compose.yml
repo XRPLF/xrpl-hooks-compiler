@@ -6,9 +6,10 @@ services:
       dockerfile: Dockerfile
     container_name: xrpld-standalone
     ports:
-      - "80:80"
       - "5005:5005"
+      - "5007:5007"
       - "6006:6006"
+      - "6008:6008"
       - "51235:51235"
     volumes:
       - ${PWD}/xrpld/config:/etc/opt/ripple
@@ -24,7 +25,7 @@ services:
     container_name: xrpld-explorer
     environment:
       - PORT=4000
-      - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:80
+      - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:6006
     ports:
       - "4000:4000"
 networks:

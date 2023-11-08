@@ -1,5 +1,4 @@
 FROM transia/xahau-binary:2023.10.30-443 as rippled
-# FROM ubuntu:jammy as base
 
 WORKDIR /app
 
@@ -15,6 +14,6 @@ RUN chmod +x /entrypoint.sh && \
     echo '#!/bin/bash' > /usr/bin/server_info && echo '/entrypoint.sh server_info' >> /usr/bin/server_info && \
     chmod +x /usr/bin/server_info
 
-EXPOSE 80 5005 6006 51235 51235/udp
+EXPOSE 5005 5007 6006 6008 51235 51235/udp
 
 ENTRYPOINT [ "/entrypoint.sh", "-a" ]
