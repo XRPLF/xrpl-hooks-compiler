@@ -25,7 +25,7 @@ services:
     container_name: xrpld-explorer
     environment:
       - PORT=4000
-      - VUE_APP_WSS_ENDPOINT=ws://0.0.0.0:6006
+      - VUE_APP_WSS_ENDPOINT=ws://127.0.0.1:6006
     ports:
       - "4000:4000"
 networks:
