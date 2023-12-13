@@ -7,9 +7,6 @@
 [submodule "hook-cleaner-c"]
 	path = hook-cleaner-c
 	url = https://github.com/XRPLF/hook-cleaner-c
-[submodule "guard-checker"]
-	path = guard-checker
-	url = git@github.com:RichardAH/guard-checker.git
 [submodule "c2wasm-api/clang/includes"]
 	path = c2wasm-api/clang/includes
 	url = https://github.com/Xahau/xahaud
