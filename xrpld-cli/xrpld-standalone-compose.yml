@@ -1,0 +1,33 @@
+version: '3.4'
+services:
+  xrpld-standalone:
+    build:
+      context: xrpld-standalone
+      dockerfile: Dockerfile
+    container_name: xrpld-standalone
+    ports:
+      - "5005:5005"
+      - "5007:5007"
+      - "6006:6006"
+      - "6008:6008"
+      - "51235:51235"
+    volumes:
+      - ${PWD}/xrpld/config:/etc/opt/ripple
+      - ${PWD}/xrpld/log:/var/log/rippled
+      - ${PWD}/xrpld/lib:/var/lib/rippled
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 16G
+  xrpld-explorer:
+    image: transia/explorer:latest
+    container_name: xrpld-explorer
+    environment:
+      - PORT=4000
+      - VUE_APP_WSS_ENDPOINT=ws://127.0.0.1:6006
+    ports:
+      - "4000:4000"
+networks:
+  witnessd:
+    driver: bridge
