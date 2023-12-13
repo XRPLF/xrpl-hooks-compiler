@@ -124,11 +124,41 @@ function get_optimization_options(options: string) {
     "-Os",
   ];
 
+  const fixed_options = [
+    "--shrink-level=100000000",
+    "--coalesce-locals-learning",
+    "--vacuum",
+    "--merge-blocks",
+    "--merge-locals",
+    "--flatten",
+    "--ignore-implicit-traps",
+    "-ffm",
+    "--const-hoisting",
+    "--code-folding",
+    "--code-pushing",
+    "--dae-optimizing",
+    "--dce",
+    "--simplify-globals-optimizing",
+    "--simplify-locals-nonesting",
+    "--reorder-locals",
+    "--rereloop",
+    "--precompute-propagate",
+    "--local-cse",
+    "--remove-unused-brs",
+    "--memory-packing",
+    "-c",
+    "--avoid-reinterprets",
+    "-Oz",
+  ];
+
   let safe_options = "";
-  for (let o of optimization_options) {
-    if (options.includes(o)) {
-      safe_options += " " + o;
-    }
+  // for (let o of optimization_options) {
+  //   if (options.includes(o)) {
+  //     safe_options += " " + o;
+  //   }
+  // }
+  for (let so of fixed_options) {
+    safe_options += " " + so;
   }
 
   return safe_options;
@@ -205,13 +235,16 @@ function link_c_files(
   const cmd =
     clang +
     " " +
+    files +
+    " " +
+    " -o " +
+    output +
+    " " +
     get_clang_options(compile_options) +
     " " +
-    get_lld_options(link_options) +
-    " " +
-    files +
-    " -o " +
-    output;
+    "-Oz " +
+    get_lld_options(link_options);
+  console.log(cmd);
   const out = shell_exec(cmd, cwd);
   result_obj.console = sanitize_shell_output(out);
   if (!existsSync(output)) {
@@ -229,7 +262,8 @@ function optimize_wasm(
   result_obj: Task
 ) {
   const unopt = cwd + "/unopt.wasm";
-  const cmd = "wasm-opt " + opt_options + " -o " + inplace + " " + unopt;
+  const cmd = "wasm-opt " + unopt + " -o " + inplace + opt_options;
+  console.log(cmd);
   const out = openSync(cwd + "/opt.log", "w");
   let error = "";
   let success = true;
@@ -391,6 +425,16 @@ function build_project(project: RequestBody, base: string) {
     build_result.tasks.push(clean_obj);
     if (!clean_wasm(dir, result, clean_obj)) {
       return complete(false, "Post-build error");
+    }
+  }
+
+  if (opt_options) {
+    const opt_obj = {
+      name: "optimizing wasm",
+    };
+    build_result.tasks.push(opt_obj);
+    if (!optimize_wasm(dir, result, opt_options, opt_obj)) {
+      return complete(false, "Optimization error");
     }
   }
 
