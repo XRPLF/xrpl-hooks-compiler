@@ -4,7 +4,7 @@ MAINTAINER Vaclav Barta "vaclav@equilibrium.co"
 RUN apk --no-cache add su-exec
 COPY clangd /usr/bin
 WORKDIR /app
-COPY c2wasm-api/clang/includes ./clang/includes
+COPY c2wasm-api/clang/includes/hook ./clang/includes
 COPY c2wasm-api/package.json .
 COPY c2wasm-api/yarn.lock .
 COPY c2wasm-api/tsconfig.json .
